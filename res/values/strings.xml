@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="applicationName">LivePaper</string>
+    <string name="livepaperLabel">LivePaper</string>
+    <string name="applicationSettings_Name">LivePaper Settings</string>
+    <string name="description">Scenes from the world, synchronized to your local time.</string>
+</resources>

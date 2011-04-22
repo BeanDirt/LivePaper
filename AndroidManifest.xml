@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="com.beandirt.livepaper"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <uses-sdk android:minSdkVersion="7" />
+
+    <application android:icon="@drawable/icon" android:label="@string/applicationName">
+
+	<service
+		android:label="@string/livepaperLabel"
+		android:name=".LivePaper"
+		android:permission="android.permission.BIND_WALLPAPER">
+		<intent-filter>
+			<action android:name="android.service.wallpaper.WallpaperService" />
+			<category android:name="android.intent.category.LAUNCHER" />
+		</intent-filter>
+		<meta-data android:name="android.service.wallpaper" android:resource="@xml/live_paper_layout" />
+	</service>
+	
+	<activity android:name=".LivePaperSettings"
+			  android:label="@string/applicationSettings_Name"
+			  android:exported="true">
+	</activity>
+
+    </application>
+    
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
+</manifest>
