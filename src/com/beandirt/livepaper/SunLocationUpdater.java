@@ -19,6 +19,8 @@ public class SunLocationUpdater {
 	
 	private float dawn;
 	private float dusk;
+	private double longitude;
+	private double latitude;
 	
 	private LocationManager mLocationManager;
 
@@ -70,6 +72,9 @@ public class SunLocationUpdater {
 			GeoLocation zLocation = new GeoLocation("MyLocation", location.getLatitude(), location.getLongitude(), location.getAltitude(), timeZone);
 			ZmanimCalendar zcal = new ComplexZmanimCalendar(zLocation);
 
+			longitude = location.getLongitude();
+			latitude = location.getLatitude();
+			
 			dawn = TimeCalculator.timeToDayFraction(zcal.getSunrise(), timeZone);
 			dusk = TimeCalculator.timeToDayFraction(zcal.getSunset(), timeZone);
 		}
@@ -85,5 +90,13 @@ public class SunLocationUpdater {
 	
 	public float getDusk(){
 		return dusk;
+	}
+	
+	public double longitude(){
+		return longitude;
+	}
+	
+	public double latitude(){
+		return latitude;
 	}
 }

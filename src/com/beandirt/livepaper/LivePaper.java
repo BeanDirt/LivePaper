@@ -10,7 +10,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.service.wallpaper.WallpaperService;
-import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
@@ -100,7 +99,8 @@ public class LivePaper extends WallpaperService {
 		public void onSurfaceCreated(SurfaceHolder holder) {
 			super.onSurfaceCreated(holder);
 			
-			SunLocationUpdater sunLocation = new SunLocationUpdater(getApplicationContext(), new LocationUpdatedListener() {
+			final SunLocationUpdater sunLocation = new SunLocationUpdater(getApplicationContext(), 
+					new LocationUpdatedListener() {
 				
 				@Override
 				public void onLocationChanged(float dawn, float dusk) {
@@ -162,6 +162,7 @@ public class LivePaper extends WallpaperService {
 			c.drawText("Today's sunset: "+sunset, 15, 100, paint);
 			c.drawText("Rotate every " + dayIntervalString + " during the day.", 15, 130, paint);
 			c.drawText("Rotate every " + nightIntervalString + " during the night.", 15, 160, paint);
+			//c.drawText("Current location: " + )
 		}
 	}
 }
