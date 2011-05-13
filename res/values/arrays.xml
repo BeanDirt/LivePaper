@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<array name="collections">
+	<item>San Francisco, USA</item>
+	<item>Pebble Beach, USA</item>
+	<item>Paris, France</item>
+	<item>Ljubljana, Slovenia </item>
+	<item>Tokyo, Japan</item>
+	<item>Daytona Beach, USA</item>
+	<item>Tulum, Mexico</item>
+	<item>Easter Island, Chile</item>
+</array>
+<array name="collection_values">
+	<item>sf</item>
+	<item>paris</item>
+	<item>pebble</item>
+	<item>paris</item>
+	<item>ljubljana</item>
+	<item>tokyo</item>
+	<item>daytona</item>
+	<item>tulum</item>
+	<item>easter</item>
+</array>
+</resources>

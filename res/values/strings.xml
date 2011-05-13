@@ -4,4 +4,10 @@
     <string name="livepaperLabel">LivePaper</string>
     <string name="applicationSettings_Name">LivePaper Settings</string>
     <string name="description">Scenes from the world, synchronized to your local time.</string>
+    
+    <string name="local_mode_title">Local Mode</string>
+    <string name="local_mode_summary">Show photos at local time.</string>
+
+    <string name="collection_title">Photo Collection</string>
+    <string name="collection_summary">Choose an installed photo collection.</string>
 </resources>
