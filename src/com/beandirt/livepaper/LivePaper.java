@@ -137,6 +137,9 @@ public class LivePaper extends WallpaperService {
 			if(debug){
 				drawDebug(c);
 			}
+			else{
+				toggle = false;
+			}
 			c.restore();
 			holder.unlockCanvasAndPost(c);
 		}
