@@ -8,6 +8,10 @@
 package com.beandirt.livepaper;
 
 public final class R {
+    public static final class array {
+        public static final int collection_values=0x7f040001;
+        public static final int collections=0x7f040000;
+    }
     public static final class attr {
     }
     public static final class drawable {
@@ -39,12 +43,17 @@ public final class R {
         public static final int night9=0x7f020019;
     }
     public static final class string {
-        public static final int applicationName=0x7f040000;
-        public static final int applicationSettings_Name=0x7f040002;
-        public static final int description=0x7f040003;
-        public static final int livepaperLabel=0x7f040001;
+        public static final int applicationName=0x7f050000;
+        public static final int applicationSettings_Name=0x7f050002;
+        public static final int collection_summary=0x7f050007;
+        public static final int collection_title=0x7f050006;
+        public static final int description=0x7f050003;
+        public static final int livepaperLabel=0x7f050001;
+        public static final int local_mode_summary=0x7f050005;
+        public static final int local_mode_title=0x7f050004;
     }
     public static final class xml {
         public static final int live_paper_layout=0x7f030000;
+        public static final int settings=0x7f030001;
     }
 }
