@@ -7,22 +7,44 @@
 
     <application android:icon="@drawable/icon" android:label="@string/applicationName">
 
-	<service
-		android:label="@string/livepaperLabel"
-		android:name=".LivePaper"
-		android:permission="android.permission.BIND_WALLPAPER">
-		<intent-filter>
-			<action android:name="android.service.wallpaper.WallpaperService" />
-			<category android:name="android.intent.category.LAUNCHER" />
-		</intent-filter>
-		<meta-data android:name="android.service.wallpaper" android:resource="@xml/live_paper_layout" />
-	</service>
+		<service
+			android:label="@string/livepaperLabel"
+			android:name=".LivePaper"
+			android:permission="android.permission.BIND_WALLPAPER">
+			<intent-filter>
+				<action android:name="android.service.wallpaper.WallpaperService" />
+			</intent-filter>
+			<meta-data android:name="android.service.wallpaper" android:resource="@xml/live_paper_layout" />
+		</service>
 	
-	<activity android:name=".LivePaperSettings"
-			  android:label="@string/applicationSettings_Name"
-			  android:exported="true">
-	</activity>
+		<activity android:name=".LivePaperSettings"
+				  android:label="@string/applicationSettings_Name"
+				  android:exported="true">
+		</activity>
 
+		<activity android:name=".dashboard.LivePaperDashboard"
+					android:label="@string/dashboardLabel"
+					android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN" />
+				<category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name=".dashboard.MyPlaces"
+					android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name=".dashboard.NewPlaces"
+					android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+			</intent-filter>
+		</activity>
+		
     </application>
     
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>

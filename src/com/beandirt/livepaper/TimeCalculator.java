@@ -118,8 +118,6 @@ public class TimeCalculator {
 		cal.setTime(time);
 		
 		float seconds = getTotalSeconds(cal);
-		Log.d("LivePaperApp", "Seconds: " + String.valueOf(seconds));
-		Log.d("LivePaperApp", "Seconds: " + String.valueOf(seconds / SECONDS_IN_DAY));
 		return seconds / SECONDS_IN_DAY;
 	}
 	

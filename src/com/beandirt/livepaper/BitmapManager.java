@@ -51,8 +51,14 @@ public class BitmapManager extends BitmapFactory{
 	}
 	
 	private float getCurrentInterval(){
-		if(timeCalculator.isDay()) return getDayInterval();
-		else return getNightInterval();
+		if(timeCalculator.isDay()) {
+			Log.d("LivePaper","using day interval");
+			return getDayInterval();
+		}
+		else{
+			Log.d("LivePaper","using night interval");
+			return getNightInterval();
+		}
 	}
 	
 	public float getDayInterval(){
@@ -69,10 +75,13 @@ public class BitmapManager extends BitmapFactory{
 		int tempCounter = (int) Math.floor(timeCalculator.timePassedSinceSolarEvent() / getCurrentInterval());
 		int[] image_resources = timeCalculator.isDay() ? day_resources : night_resources;
 		
+		Log.d("LivePaper",String.valueOf(timeCalculator.timePassedSinceSolarEvent()));
+		Log.d("LivePaper",String.valueOf(getCurrentInterval()));
+		
 		Log.d("LivePaper",String.valueOf(tempCounter));
 		Log.d("LivePaper",String.valueOf(counter));
 		
-		if(tempCounter != counter){
+		if(tempCounter != counter || bitmap == null){
 			counter = tempCounter;
 			bitmap = BitmapManager.decodeResource(this.resources, image_resources[counter]);
 		}
@@ -80,8 +89,15 @@ public class BitmapManager extends BitmapFactory{
 		return bitmap;
 	}
 	
-	public int getBitmap(int timePassedSinceSolarEvent){
-		int tempInterval = (int) Math.floor(getCurrentInterval() / timePassedSinceSolarEvent);
+	public int getBitmap(float timePassedSinceSolarEvent){
+		float currentTestTime = timePassedSinceSolarEvent + timeCalculator.getDawn();
+		boolean isDay = (currentTestTime >= timeCalculator.getDawn() && currentTestTime < timeCalculator.getDusk());
+		float currentInterval = (isDay) ? getDayInterval() : getNightInterval();
+
+		timePassedSinceSolarEvent = (isDay) ? timePassedSinceSolarEvent : currentTestTime - timeCalculator.getDusk();
+		Log.d("Testing","Current Interval: " + TimeCalculator.getPrettyTime( currentInterval ) + " (" + String.valueOf(currentInterval) + ")");
+		Log.d("Testing","Time Passed Since Solar Event: " + TimeCalculator.getPrettyTime( timePassedSinceSolarEvent ) + " (" + String.valueOf(timePassedSinceSolarEvent) + ")");
+		int tempInterval = (int) Math.floor(timePassedSinceSolarEvent / currentInterval);
 		return tempInterval;
 	}
 	
