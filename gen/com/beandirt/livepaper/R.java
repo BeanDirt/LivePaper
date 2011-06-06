@@ -43,8 +43,14 @@ public final class R {
         public static final int night9=0x7f020019;
     }
     public static final class id {
+        public static final int button1=0x7f070005;
+        public static final int button2=0x7f070007;
+        public static final int button3=0x7f070008;
         public static final int new_collections_button=0x7f070001;
         public static final int settings_button=0x7f070002;
+        public static final int view1=0x7f070004;
+        public static final int view2=0x7f070006;
+        public static final int viewer_something=0x7f070003;
         public static final int your_collections_button=0x7f070000;
     }
     public static final class layout {
