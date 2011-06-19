@@ -1,88 +1,53 @@
 package com.beandirt.livepaper.dashboard;
-
-import android.app.Activity;
+import static com.beandirt.livepaper.dashboard.database.PlacesTable.Places.FIELD_NAME;
+import android.app.ListActivity;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.widget.Button;
-import android.widget.ViewFlipper;
+import android.widget.SimpleCursorAdapter;
 
 import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.dashboard.database.Place;
+import com.beandirt.livepaper.dashboard.database.PlacesDbAdapter;
 
-public class MyPlaces extends Activity implements View.OnClickListener{
+public class MyPlaces extends ListActivity {
 
-	ViewFlipper vf;
-	Button butt1;
-	Button butt2;
+	private static final String TAG = "MyPlaces";
+	private PlacesDbAdapter dbAdapter;
+	private SimpleCursorAdapter adapter;
+	private Cursor places;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.my_places);
+	}
+	
+	private void initList(){
+		dbAdapter = PlacesDbAdapter.getInstanceOf(getApplicationContext());
+		createFakePlace();
 		
-		vf = (ViewFlipper) findViewById(R.id.viewer_something);
-		Button butt1 = (Button) findViewById(R.id.button1);
-		Button butt2 = (Button) findViewById(R.id.button2);
-		butt1.setOnClickListener(this);
-		butt2.setOnClickListener(this);
+		places = dbAdapter.fetchPlaces();
+		startManagingCursor(places);
+		
+		adapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.my_places_list_item,places,new String[] {FIELD_NAME}, new int[] {R.id.myPlacesName});
+		setListAdapter(adapter);
 	}
 
+	private void createFakePlace(){
+		Place place = new Place("Baker Beach", "Baker Beach, San Francisco, CA", "this would be a longer description of the location", 37.8034211407655, -122.47789263725281, true);
+		place = dbAdapter.createPlace(place);
+	}
+	
 	@Override
-	public void onClick(View v) {
-		if(v.getId() == R.id.button1){
-			Log.d("LivePaper","button one pressed");
-			vf.setOutAnimation(outToLeftAnimation());
-			vf.setInAnimation(inFromRightAnimation());
-			vf.showNext();
-		}
-		else{
-			Log.d("LivePaper","button two pressed");
-			vf.setOutAnimation(outToRightAnimation());
-			vf.setInAnimation(inFromLeftAnimation());
-			vf.showPrevious();
-		}
+	protected void onResume() {
+		super.onResume();
+		initList();
 	}
 	
-	private Animation inFromRightAnimation() {
-		Animation inFromRight = new TranslateAnimation(
-		Animation.RELATIVE_TO_PARENT,  +1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-		Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-		);
-		inFromRight.setDuration(500);
-		inFromRight.setInterpolator(new AccelerateInterpolator());
-		return inFromRight;
+	@Override
+	protected void onDestroy(){
+		super.onDestroy();
+		dbAdapter.close();
 	}
 	
-	private Animation outToLeftAnimation() {
-		Animation outtoLeft = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  -1.0f,
-				Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-		);
-		outtoLeft.setDuration(500);
-		outtoLeft.setInterpolator(new AccelerateInterpolator());
-		return outtoLeft;
-	}
-	
-	private Animation inFromLeftAnimation() {
-		Animation inFromLeft = new TranslateAnimation(
-				Animation.RELATIVE_TO_PARENT,  -1.0f, Animation.RELATIVE_TO_PARENT,  0.0f,
-				Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-		);
-		inFromLeft.setDuration(500);
-		inFromLeft.setInterpolator(new AccelerateInterpolator());
-		return inFromLeft;
-	}
-	
-	private Animation outToRightAnimation() {
-		Animation outtoRight = new TranslateAnimation(
-			Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,  +1.0f,
-			Animation.RELATIVE_TO_PARENT,  0.0f, Animation.RELATIVE_TO_PARENT,   0.0f
-		);
-		outtoRight.setDuration(500);
-		outtoRight.setInterpolator(new AccelerateInterpolator());
-		return outtoRight;
-	}
 }
