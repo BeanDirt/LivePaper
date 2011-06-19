@@ -43,6 +43,7 @@ public final class R {
         public static final int night9=0x7f020019;
     }
     public static final class id {
+        public static final int myPlacesName=0x7f070003;
         public static final int new_collections_button=0x7f070001;
         public static final int settings_button=0x7f070002;
         public static final int your_collections_button=0x7f070000;
@@ -50,7 +51,8 @@ public final class R {
     public static final class layout {
         public static final int dashboard=0x7f030000;
         public static final int my_places=0x7f030001;
-        public static final int new_places=0x7f030002;
+        public static final int my_places_list_item=0x7f030002;
+        public static final int new_places=0x7f030003;
     }
     public static final class string {
         public static final int applicationName=0x7f060000;
