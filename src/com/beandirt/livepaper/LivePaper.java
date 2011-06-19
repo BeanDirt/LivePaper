@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.service.wallpaper.WallpaperService;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
@@ -83,16 +84,15 @@ public class LivePaper extends WallpaperService {
 				final int yPixelOffset) {
 			super.onOffsetsChanged(xOffset, yOffset, xOffsetStep, yOffsetStep,
 					xPixelOffset, yPixelOffset);
-			
 			Runnable offsetsChangedCommand = new Runnable() {
 				public void run() {
 					if (xOffsetStep != 0f) {
 						setParallax(xOffset);
+						drawBitmap(false);
 					}
 				};
 			};
 			executor.execute(offsetsChangedCommand);
-			drawBitmap(false);
 		}
 
 		@Override
@@ -116,9 +116,7 @@ public class LivePaper extends WallpaperService {
 
 		@Override
 		public void onVisibilityChanged(boolean visible) {
-			if(!visible){
-				drawBitmap(false);
-			}
+			drawBitmap(false);
 		}
 		
 		private void setParallax(float xOffset) {
@@ -165,7 +163,7 @@ public class LivePaper extends WallpaperService {
 			c.drawText("Today's sunset: "+sunset, 15, 100, paint);
 			c.drawText("Rotate every " + dayIntervalString + " during the day.", 15, 130, paint);
 			c.drawText("Rotate every " + nightIntervalString + " during the night.", 15, 160, paint);
-			//c.drawText("Current location: " + )
+			c.drawText("Current photo: " + bitmapManager.getCounter(), 15, 190, paint);
 		}
 	}
 }

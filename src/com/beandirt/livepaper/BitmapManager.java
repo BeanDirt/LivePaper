@@ -108,4 +108,8 @@ public class BitmapManager extends BitmapFactory{
 	public int[] getNightResources(){
 		return night_resources;
 	}
+	
+	public int getCounter(){
+		return counter + 1;
+	}
 }
