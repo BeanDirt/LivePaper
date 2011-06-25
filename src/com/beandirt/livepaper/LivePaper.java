@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.service.wallpaper.WallpaperService;
+import android.util.Log;
 import android.view.Display;
 import android.view.SurfaceHolder;
 import android.view.WindowManager;
@@ -41,6 +42,8 @@ public class LivePaper extends WallpaperService {
 		Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
 		SCREEN_WIDTH = display.getWidth();
 		SCREEN_HEIGHT = display.getHeight();
+		Log.d("LivePaper", String.valueOf(SCREEN_WIDTH));
+		Log.d("LivePaper", String.valueOf(SCREEN_HEIGHT));
 	}
 	
 	class LivePaperEngine extends Engine{

@@ -37,6 +37,8 @@ public class BitmapManager extends BitmapFactory{
 									R.drawable.day13,
 									R.drawable.day14};
 	
+	private static final String TAG = "BitmapManager";
+	
 	public BitmapManager(TimeCalculator timeCalculator, Resources resources){
 		this.resources = resources;
 		this.timeCalculator = timeCalculator;
@@ -52,11 +54,11 @@ public class BitmapManager extends BitmapFactory{
 	
 	private float getCurrentInterval(){
 		if(timeCalculator.isDay()) {
-			Log.d("LivePaper","using day interval");
+			Log.d(TAG,"using day interval");
 			return getDayInterval();
 		}
 		else{
-			Log.d("LivePaper","using night interval");
+			Log.d(TAG,"using night interval");
 			return getNightInterval();
 		}
 	}
@@ -75,11 +77,11 @@ public class BitmapManager extends BitmapFactory{
 		int tempCounter = (int) Math.floor(timeCalculator.timePassedSinceSolarEvent() / getCurrentInterval());
 		int[] image_resources = timeCalculator.isDay() ? day_resources : night_resources;
 		
-		Log.d("LivePaper",String.valueOf(timeCalculator.timePassedSinceSolarEvent()));
-		Log.d("LivePaper",String.valueOf(getCurrentInterval()));
+		Log.d(TAG,String.valueOf(timeCalculator.timePassedSinceSolarEvent()));
+		Log.d(TAG,String.valueOf(getCurrentInterval()));
 		
-		Log.d("LivePaper",String.valueOf(tempCounter));
-		Log.d("LivePaper",String.valueOf(counter));
+		Log.d(TAG,String.valueOf(tempCounter));
+		Log.d(TAG,String.valueOf(counter));
 		
 		if(tempCounter != counter || bitmap == null){
 			counter = tempCounter;
