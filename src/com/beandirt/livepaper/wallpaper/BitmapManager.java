@@ -15,30 +15,30 @@ public class BitmapManager extends BitmapFactory{
 	
 	private int counter;
 	private int[] night_resources = {R.drawable.night1,
-									R.drawable.night2,
-									R.drawable.night3,
-									R.drawable.night4,
-									R.drawable.night5,
-									R.drawable.night6,
-									R.drawable.night7,
-									R.drawable.night8,
-									R.drawable.night9,
-									R.drawable.night10};
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1};
 	
 	private int[] day_resources = {R.drawable.day1,
-									R.drawable.day2,
-									R.drawable.day3,
-									R.drawable.day4,
-									R.drawable.day5,
-									R.drawable.day6,
-									R.drawable.day7,
-									R.drawable.day8,
-									R.drawable.day9,
-									R.drawable.day10,
-									R.drawable.day11,
-									R.drawable.day12,
-									R.drawable.day13,
-									R.drawable.day14};
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1};
 	
 	public BitmapManager(TimeCalculator timeCalculator, Resources resources){
 		this.resources = resources;
