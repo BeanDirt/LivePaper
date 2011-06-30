@@ -1,8 +1,11 @@
 package com.beandirt.livepaper.dashboard;
 import static com.beandirt.livepaper.dashboard.database.PlacesTable.Places.FIELD_NAME;
 import android.app.ListActivity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 import com.beandirt.livepaper.R;
@@ -31,10 +34,20 @@ public class MyPlaces extends ListActivity {
 		
 		adapter = new SimpleCursorAdapter(getApplicationContext(),R.layout.my_places_list_item,places,new String[] {FIELD_NAME}, new int[] {R.id.myPlacesName});
 		setListAdapter(adapter);
+		
+	}
+	
+	@Override
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		super.onListItemClick(l, v, position, id);
+		Intent intent = new Intent(getApplicationContext(), PlaceDetail.class);
+		places.moveToPosition(position);
+		intent.putExtra("rowid", places.getLong(0));
+		startActivity(intent);
 	}
 
 	private void createFakePlace(){
-		Place place = new Place("Baker Beach", "Baker Beach, San Francisco, CA", "this would be a longer description of the location", 37.8034211407655, -122.47789263725281, true);
+		Place place = new Place("Golden Gate Bridge", "Baker Beach, San Francisco, CA", "this would be a longer description of the location", 37.8034211407655, -122.47789263725281, true);
 		place = dbAdapter.createPlace(place);
 	}
 	

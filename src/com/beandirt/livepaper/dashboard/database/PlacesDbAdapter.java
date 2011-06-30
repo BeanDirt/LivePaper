@@ -64,6 +64,18 @@ public class PlacesDbAdapter {
 	        }, null, null, null, null, null);
 	}
 	
+	public Cursor fetchPlace(long rowid){
+		return db.query(PLACES_TABLE, new String[] {
+	            FIELD_ID,
+	            FIELD_NAME,
+	            FIELD_LOCATION_SHORT,
+	            FIELD_LOCATION_LONG,
+	            FIELD_LATITUDE,
+	            FIELD_LONGITUDE,
+	            FIELD_ENABLED
+	        },  FIELD_ID + "=" + rowid, null, null, null, null);
+	}
+	
 	private ContentValues createContentValues(Place place){
 		ContentValues values = new ContentValues();
 		values.put(FIELD_NAME, place.getName());

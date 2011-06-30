@@ -45,6 +45,13 @@
 			</intent-filter>
 		</activity>
 		
+		<activity android:name=".dashboard.PlaceDetail"
+					android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+			</intent-filter>
+		</activity>
+		
     </application>
     
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
