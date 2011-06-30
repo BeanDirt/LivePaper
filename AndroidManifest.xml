@@ -52,6 +52,27 @@
 			</intent-filter>
 		</activity>
 		
+		<activity android:name=".dashboard.MyCollections"
+                  android:label="My Collections">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".dashboard.NewCollections"
+                  android:label="New Collections">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".dashboard.Downloader"
+                  android:label="Downloader">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+		
     </application>
     
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>

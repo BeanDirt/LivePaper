@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.beandirt.livepaper.R;
 import android.app.ListActivity;
 import android.content.Context;
 import android.content.Intent;
@@ -19,7 +20,10 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.beandirt.livepaperdownloader.FlickrWebService.PostMethod;
+import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
+import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
+import com.beandirt.livepaper.dashboard.model.Collection;
+import com.beandirt.livepaper.dashboard.model.Photoset;
 
 public class MyCollections extends ListActivity {
 

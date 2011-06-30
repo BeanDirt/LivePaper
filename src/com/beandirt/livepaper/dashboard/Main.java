@@ -7,7 +7,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.beandirt.livepaperdownloader.FlickrWebService.PostMethod;
+import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
+import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
+import com.beandirt.livepaper.dashboard.model.Collection;
+import com.beandirt.livepaper.dashboard.model.Photoset;
 
 import android.app.Activity;
 import android.app.ProgressDialog;

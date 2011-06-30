@@ -19,6 +19,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
 import com.beandirt.livepaper.dashboard.model.Collection;
