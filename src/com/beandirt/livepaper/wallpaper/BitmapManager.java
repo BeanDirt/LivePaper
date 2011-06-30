@@ -1,4 +1,7 @@
-package com.beandirt.livepaper;
+package com.beandirt.livepaper.wallpaper;
+
+import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.R.drawable;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

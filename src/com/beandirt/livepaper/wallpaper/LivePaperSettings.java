@@ -1,4 +1,7 @@
-package com.beandirt.livepaper;
+package com.beandirt.livepaper.wallpaper;
+
+import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.R.xml;
 
 import android.os.Bundle;
 import android.preference.PreferenceActivity;

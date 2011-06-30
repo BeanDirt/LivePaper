@@ -1,4 +1,4 @@
-package com.beandirt.livepaper;
+package com.beandirt.livepaper.wallpaper;
 
 import java.util.TimeZone;
 
