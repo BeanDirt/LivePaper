@@ -1,31 +1,42 @@
 package com.beandirt.livepaper.dashboard;
 
-import com.beandirt.livepaper.R;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
-public class LivePaperDashboard extends Activity {
+import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.dashboard.database.CollectionsDbAdapter;
 
+public class LivePaperDashboard extends LivePaperActivity {
+	
+	private static final String TAG = "LivePaperDashboard";
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard);
 	}
 	
-	public void gotoMyPlaces(View v){
-		Intent intent = new Intent(v.getContext(), MyPlaces.class);
-		startActivityForResult(intent, 0);
+	@Override
+	protected void onResume() {
+		collectionsAdapter = CollectionsDbAdapter.getInstanceOf(getApplicationContext());
+		checkForUpdates();
+		super.onResume();
 	}
 	
-	public void gotoNewPlaces(View v){
-		Intent intent = new Intent(v.getContext(), NewPlaces.class);
-		startActivityForResult(intent, 0);
+	@Override
+	protected void onDestroy() {
+		collectionsAdapter.close();
+		super.onDestroy();
 	}
 	
-	public void gotoSettings(View v){
-		
+	public void gotoNewCollections(View v){
+		Intent intent = new Intent(this, NewCollections.class);
+		startActivity(intent);
+	}
+	
+	public void gotoMyCollections(View v){
+		Intent intent = new Intent(this, MyCollections.class);
+		startActivity(intent);
 	}
 }

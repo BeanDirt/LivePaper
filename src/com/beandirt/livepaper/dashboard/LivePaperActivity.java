@@ -7,37 +7,34 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.ListActivity;
-import android.content.Context;
-import android.content.Intent;
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.dashboard.database.CollectionsDbAdapter;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
 import com.beandirt.livepaper.dashboard.model.Collection;
 import com.beandirt.livepaper.dashboard.model.Photoset;
 
-public class NewCollections extends ListActivity {
-
-	@SuppressWarnings("unused")
-	private static final String TAG = "Collections"; 
+public class LivePaperActivity extends Activity {
 	
-	List<Collection> collections;
+	private static final String TAG = "LivePaperActivity";
 	
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.photosets);
-		
-		AsyncTask<Object, Object, JSONObject> getCollections = new AsyncTask<Object, Object, JSONObject>() {
+	private List<Collection> collections;
+	private ProgressDialog dialog;
+	
+	protected CollectionsDbAdapter collectionsAdapter;
+	
+	protected void checkForUpdates(){
+    	dialog = ProgressDialog.show(this, "", 
+                "Checking for updates...", true);
+        dialog.show();
+        
+        AsyncTask<Object, Object, JSONObject> getCollections = new AsyncTask<Object, Object, JSONObject>() {
 
     		@Override
     		protected JSONObject doInBackground(Object... params) {
@@ -53,7 +50,8 @@ public class NewCollections extends ListActivity {
 					for(int i = 0; i < responseArray.length(); i++){
 						List<Photoset> collectionSets = new ArrayList<Photoset>(); 
 						String collectionId = responseArray.getJSONObject(i).getString("id");
-						String collectionName = responseArray.getJSONObject(i).getString("title");
+						String collectionTitle = responseArray.getJSONObject(i).getString("title");
+						String collectionDescription = responseArray.getJSONObject(i).getString("description");
 						
 						if(responseArray.getJSONObject(i).optJSONArray("set") == null){
 							continue;
@@ -68,45 +66,42 @@ public class NewCollections extends ListActivity {
 							collectionSets.add(new Photoset(setId,setName,setDescription));
 						}
 						
-						//collections.add(new Collection(collectionId, collectionName, collectionSets));
+						collections.add(new Collection(collectionId, collectionTitle, collectionDescription, collectionSets, ".99", true, true, false));
 					}
 					
-					populateList();
+					if(!updateDatabase()){
+						Toast.makeText(getApplicationContext(), getString(R.string.new_collections), Toast.LENGTH_SHORT).show();
+					}
+					
 				} catch (JSONException e) {
+					Toast.makeText(getApplicationContext(), getString(R.string.error_unexpected_response), Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
 				}
 				catch(Exception e){
+					Toast.makeText(getApplicationContext(), getString(R.string.error_checking_for_updates), Toast.LENGTH_SHORT).show();
 					e.printStackTrace();
+				}
+				finally{
+					dialog.hide();
 				}
     		}
     	};
     	getCollections.execute();
-	}
+    }
 	
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		Intent intent = new Intent(this,Downloader.class);
-		intent.putExtra("id", collections.get(position).getId());
-		startActivity(intent);
-		super.onListItemClick(l, v, position, id);
-	}
-
-	private void populateList(){
-		setListAdapter(new ArrayAdapter<Collection>(this, R.layout.list_photoset_item, collections){
-			
-			@Override
-			public View getView(int position, View convertView, ViewGroup parent){
-				View v = convertView;
-				if(v == null){
-					LayoutInflater vi = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-					v = vi.inflate(R.layout.list_collection_item, null);
-				}
-				
-				Collection collection = collections.get(position);
-				TextView label = (TextView) v.findViewById(R.id.collection_name);
-				label.setText(collection.getTitle());
-				return v;
+	private boolean updateDatabase(){
+		boolean updatedFlag = false;
+		for(Collection collection : collections){
+			int result = collectionsAdapter.updateCollection(collection);
+			switch(result){
+			case 0: collectionsAdapter.createCollection(collection); // created new collections
+				break;
+			case 1: updatedFlag = true; // updated collections
+				break;
+			default: Log.w(TAG, "Found multiple results for one collection ID");
+				break;
 			}
-		});
+		}
+		return updatedFlag;
 	}
 }

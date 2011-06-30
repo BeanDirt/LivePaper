@@ -11,4 +11,5 @@
 
     <string name="collection_title">Photo Collection</string>
     <string name="collection_summary">Choose an installed photo collection.</string>
+    <string name="new_collections">Added new collections</string>
 </resources>

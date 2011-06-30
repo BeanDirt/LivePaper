@@ -68,7 +68,7 @@ public class MyCollections extends ListActivity {
 							collectionSets.add(new Photoset(setId,setName,setDescription));
 						}
 						
-						collections.add(new Collection(collectionId, collectionName, collectionSets));
+						//collections.add(new Collection(collectionId, collectionName, collectionSets));
 					}
 					
 					populateList();
@@ -104,7 +104,7 @@ public class MyCollections extends ListActivity {
 				
 				Collection collection = collections.get(position);
 				TextView label = (TextView) v.findViewById(R.id.collection_name);
-				label.setText(collection.getName());
+				label.setText(collection.getTitle());
 				return v;
 			}
 		});

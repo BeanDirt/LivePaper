@@ -3,26 +3,65 @@ package com.beandirt.livepaper.dashboard.model;
 import java.util.List;
 
 public class Collection {
+	private long rowId;
 
 	private final String id;
-	private final String name;
+	private final String title;
+	private final String description;
 	private final List<Photoset> photosets;
+	private final String price;
+	private final Boolean trial;
+	private final Boolean enabled;
+	private final Boolean purchased;
 	
-	public Collection(String id, String name, List<Photoset> photosets){
+	public Collection(String id, String title, String description, List<Photoset> photosets, String price, Boolean trial, Boolean enabled, Boolean purchased){
 		this.id = id;
-		this.name = name;
+		this.title = title;
+		this.description = description;
 		this.photosets = photosets;
+		this.price = price;
+		this.trial = trial;
+		this.enabled = enabled;
+		this.purchased = purchased;
 	}
 
 	public String getId() {
 		return id;
 	}
+	
+	public void setRowId(long rowId){
+		this.rowId = rowId;
+	}
+	
+	public long getRowId(){
+		return this.rowId;
+	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return this.title;
+	}
+	
+	public String getDescription() {
+		return this.description;
 	}
 	
 	public List<Photoset> getPhotosets() {
-		return photosets;
+		return this.photosets;
+	}
+
+	public String getPrice() {
+		return this.price;
+	}
+
+	public Boolean getTrial() {
+		return this.trial;
+	}
+
+	public Boolean getEnabled() {
+		return this.enabled;
+	}
+	
+	public Boolean getPurchased() {
+		return this.purchased;
 	}
 }
