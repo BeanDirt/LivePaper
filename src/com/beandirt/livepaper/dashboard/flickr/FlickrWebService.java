@@ -58,7 +58,6 @@ public class FlickrWebService {
 		case GET_FROB: return getFrob();
 		case GET_PHOTOSET_LIST: return getPhotosetList();
 		case GET_AUTH_TOKEN: return getAuthToken();
-		case GET_COLLECTION: return getCollection();
 		case GET_COLLECTION_LIST: return getCollectionList();
 		}
 		return null;
@@ -69,42 +68,16 @@ public class FlickrWebService {
 		postParameters.add(new BasicNameValuePair("api_key", KEY));
 		postParameters.add(new BasicNameValuePair("format", "json"));
 		postParameters.add(new BasicNameValuePair("frob", FROB));
-		postParameters.add(new BasicNameValuePair("method", "flickr.auth.getToken"));
+		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_AUTH_TOKEN.getMethod()));
 		
-		StringBuffer buffer = new StringBuffer();
-        buffer.append(SECRET);
-        buffer.append("api_key");
-        buffer.append(KEY);
-        buffer.append("format");
-        buffer.append("json");
-        buffer.append("frob");
-        buffer.append(FROB);
-        buffer.append("method");
-        buffer.append("flickr.auth.getToken");
-        
 		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			String signature = ByteUtilities.toHexString(md.digest(buffer
-                    .toString().getBytes("UTF-8")));
-			postParameters.add(new BasicNameValuePair("api_sig", signature));
+			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
 			UrlEncodedFormEntity formEntity;
 			formEntity = new UrlEncodedFormEntity(postParameters);
 			httpPost.setEntity(formEntity);
 			response = httpClient.execute(httpPost);
 			return new JSONObject(EntityUtils.toString(response.getEntity()).substring(14));
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -116,53 +89,17 @@ public class FlickrWebService {
 		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair("api_key", KEY));
 		postParameters.add(new BasicNameValuePair("format", "json"));
-		postParameters.add(new BasicNameValuePair("method", "flickr.auth.getFrob"));
+		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_FROB.getMethod()));
 		
-		StringBuffer buffer = new StringBuffer();
-        buffer.append(SECRET);
-        buffer.append("api_key");
-        buffer.append(KEY);
-        buffer.append("format");
-        buffer.append("json");
-        buffer.append("method");
-        buffer.append("flickr.auth.getFrob");
-        
         try {
 			UrlEncodedFormEntity formEntity;
 			formEntity = new UrlEncodedFormEntity(postParameters);
+			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
 			httpPost.setEntity(formEntity);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-        try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			String signature = ByteUtilities.toHexString(md.digest(buffer
-                    .toString().getBytes("UTF-8")));
-			postParameters.add(new BasicNameValuePair("api_sig", signature));
-		} catch (NoSuchAlgorithmException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
-			UrlEncodedFormEntity formEntity;
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
 			response = httpClient.execute(httpPost);
 			FROB = new JSONObject(EntityUtils.toString(response.getEntity()).substring(14)).getJSONObject("frob").getString("_content");
 			
-			buffer = new StringBuffer();
+			StringBuffer buffer = new StringBuffer();
 	        buffer.append(SECRET);
 	        buffer.append("api_key");
 	        buffer.append(KEY);
@@ -175,28 +112,17 @@ public class FlickrWebService {
 			String api_sig = ByteUtilities.toHexString(md.digest(buffer
                     .toString().getBytes("UTF-8")));
 	        
-	        returnValue = new JSONObject();
+			returnValue = new JSONObject();
 			returnValue.put("api_key", KEY);
 			returnValue.put("perms","read");
 			returnValue.put("frob", FROB);
 			returnValue.put("api_sig", api_sig);
 			returnValue.put("url", AUTH_URL);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
+        catch(Exception e){
+        	// TODO Auto-generated catch block
+			e.printStackTrace();
+        }
 		
 		return returnValue;
 		
@@ -208,129 +134,114 @@ public class FlickrWebService {
 		postParameters.add(new BasicNameValuePair("api_key", KEY));
 		postParameters.add(new BasicNameValuePair("auth_token", TOKEN));
 		postParameters.add(new BasicNameValuePair("format", "json"));
-		postParameters.add(new BasicNameValuePair("method", "flickr.photosets.getList"));
-		//postParameters.add(new BasicNameValuePair("user_id", "64497976@N06"));
-		
-		StringBuffer buffer = new StringBuffer();
-        buffer.append(SECRET);
-        buffer.append("api_key");
-        buffer.append(KEY);
-        buffer.append("auth_token");
-        buffer.append(TOKEN);
-        buffer.append("format");
-        buffer.append("json");
-        buffer.append("method");
-        buffer.append("flickr.photosets.getList");
+		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_PHOTOSET_LIST.getMethod()));
 		
 		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			String signature = ByteUtilities.toHexString(md.digest(buffer
-                    .toString().getBytes("UTF-8")));
 			UrlEncodedFormEntity formEntity;
-			postParameters.add(new BasicNameValuePair("api_sig", signature));
+			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
 			formEntity = new UrlEncodedFormEntity(postParameters);
 			httpPost.setEntity(formEntity);
-		} catch (NoSuchAlgorithmException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, entityString);
 			returnValue = new JSONObject(entityString.substring(14));
-		} catch (ClientProtocolException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
+		}
+		
+		return returnValue;
+	}
+	
+	public JSONObject getPhotoList(String photosetId){
+		
+		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
+		postParameters.add(new BasicNameValuePair("api_key", KEY));
+		postParameters.add(new BasicNameValuePair("auth_token", TOKEN));
+		postParameters.add(new BasicNameValuePair("extras", "original_format"));
+		postParameters.add(new BasicNameValuePair("format", "json"));
+		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_PHOTO_LIST.getMethod()));
+		postParameters.add(new BasicNameValuePair("photoset_id", photosetId));
+				
+		try {
+			UrlEncodedFormEntity formEntity;
+			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
+			formEntity = new UrlEncodedFormEntity(postParameters);
+			httpPost.setEntity(formEntity);
+			response = httpClient.execute(httpPost);
+			String entityString = EntityUtils.toString(response.getEntity());
+			returnValue = new JSONObject(entityString.substring(14));
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return returnValue;
 	}
 	
-	private JSONObject getCollection(){
-		return new JSONObject();
+	private String createSignature(ArrayList<NameValuePair> postParameters){
+		StringBuffer buffer = new StringBuffer();
+		buffer.append(SECRET);
+		
+		for(NameValuePair param : postParameters){
+			buffer.append(param.getName());
+			buffer.append(param.getValue());
+		}
+		
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("MD5");
+			String signature = ByteUtilities.toHexString(md.digest(buffer
+					.toString().getBytes("UTF-8")));
+			return signature;
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return "";
 	}
 	
 	public JSONObject getCollectionList(){
-		
-		String method = "flickr.collections.getTree";
 		
 		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair("api_key", KEY));
 		postParameters.add(new BasicNameValuePair("auth_token", TOKEN));
 		postParameters.add(new BasicNameValuePair("format", "json"));
-		postParameters.add(new BasicNameValuePair("method", method));
-		//postParameters.add(new BasicNameValuePair("user_id", "64497976@N06"));
+		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_COLLECTION_LIST.getMethod()));
 		
-		StringBuffer buffer = new StringBuffer();
-        buffer.append(SECRET);
-        buffer.append("api_key");
-        buffer.append(KEY);
-        buffer.append("auth_token");
-        buffer.append(TOKEN);
-        buffer.append("format");
-        buffer.append("json");
-        buffer.append("method");
-        buffer.append(method);
 		
 		try {
-			MessageDigest md = MessageDigest.getInstance("MD5");
-			String signature = ByteUtilities.toHexString(md.digest(buffer
-                    .toString().getBytes("UTF-8")));
 			UrlEncodedFormEntity formEntity;
-			postParameters.add(new BasicNameValuePair("api_sig", signature));
+			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
 			formEntity = new UrlEncodedFormEntity(postParameters);
 			httpPost.setEntity(formEntity);
-		} catch (NoSuchAlgorithmException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		try {
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, entityString);
 			returnValue = new JSONObject(entityString.substring(14));
-		} catch (ClientProtocolException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		} 
+		String something = PostMethod.GET_AUTH_TOKEN.getMethod();
 		return returnValue;
-	}
-	
-	public String getPhotoSet(){
-		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-		postParameters.add(new BasicNameValuePair("api_key", KEY));
-		postParameters.add(new BasicNameValuePair("format", "json"));
-		postParameters.add(new BasicNameValuePair("method", "flickr.photosets.getList"));
-		return "";
+		
 	}
 	
 	public enum PostMethod{
-		GET_FROB, GET_PHOTOSET_LIST, GET_PHOTOSET, GET_COLLECTION_LIST, GET_COLLECTION, GET_AUTH_TOKEN;
+		GET_FROB("flickr.auth.getFrob"), GET_PHOTOSET_LIST("flickr.photosets.getList"), GET_COLLECTION_LIST("flickr.collections.getTree"), GET_AUTH_TOKEN("flickr.auth.getToken"), GET_PHOTO_LIST("flickr.photosets.getPhotos");
+		
+		private String m;
+		
+		private PostMethod(String m){
+			this.m = m;
+		}
+		
+		public String getMethod(){
+			return this.m;
+		}
 	}
 }
