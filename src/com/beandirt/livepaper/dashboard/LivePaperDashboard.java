@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.database.CollectionsDbAdapter;
+import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
 
 public class LivePaperDashboard extends LivePaperActivity {
 	
@@ -19,14 +19,14 @@ public class LivePaperDashboard extends LivePaperActivity {
 	
 	@Override
 	protected void onResume() {
-		collectionsAdapter = CollectionsDbAdapter.getInstanceOf(getApplicationContext());
+		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 		checkForUpdates();
 		super.onResume();
 	}
 	
 	@Override
 	protected void onDestroy() {
-		collectionsAdapter.close();
+		dbAdapter.close();
 		super.onDestroy();
 	}
 	

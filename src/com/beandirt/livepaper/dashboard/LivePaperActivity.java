@@ -2,6 +2,7 @@ package com.beandirt.livepaper.dashboard;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -14,7 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.database.CollectionsDbAdapter;
+import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
 import com.beandirt.livepaper.dashboard.model.Collection;
@@ -27,7 +28,7 @@ public class LivePaperActivity extends Activity {
 	private List<Collection> collections;
 	private ProgressDialog dialog;
 	
-	protected CollectionsDbAdapter collectionsAdapter;
+	protected LivePaperDbAdapter dbAdapter;
 	
 	protected void checkForUpdates(){
     	dialog = ProgressDialog.show(this, "", 
@@ -61,12 +62,11 @@ public class LivePaperActivity extends Activity {
 						
 						for(int j = 0; j < responseSets.length(); j++){
 							String setId = responseSets.getJSONObject(j).getString("id");
-							String setName = responseSets.getJSONObject(j).getString("title");
-							String setDescription = responseSets.getJSONObject(j).getString("description"); 
-							collectionSets.add(new Photoset(setId,setName,setDescription));
+							String setTitle = responseSets.getJSONObject(j).getString("title");
+							collectionSets.add(new Photoset(setId,collectionId,setTitle));
 						}
 						
-						collections.add(new Collection(collectionId, collectionTitle, collectionDescription, collectionSets, ".99", true, true, false));
+						collections.add(new Collection(collectionId, collectionTitle, collectionDescription, collectionSets, ".99", new Random().nextBoolean(), new Random().nextBoolean(), new Random().nextBoolean()));
 					}
 					
 					if(!updateDatabase()){
@@ -92,14 +92,19 @@ public class LivePaperActivity extends Activity {
 	private boolean updateDatabase(){
 		boolean updatedFlag = false;
 		for(Collection collection : collections){
-			int result = collectionsAdapter.updateCollection(collection);
+			int result = dbAdapter.updateCollection(collection);
 			switch(result){
-			case 0: collectionsAdapter.createCollection(collection); // created new collections
+			case 0: dbAdapter.createCollection(collection); // created new collections
 				break;
 			case 1: updatedFlag = true; // updated collections
 				break;
 			default: Log.w(TAG, "Found multiple results for one collection ID");
 				break;
+			}
+			
+			for(Photoset photoset : collection.getPhotosets()){
+				if(dbAdapter.updatePhotoset(photoset) == 0)
+					dbAdapter.createPhotoset(photoset);
 			}
 		}
 		return updatedFlag;
