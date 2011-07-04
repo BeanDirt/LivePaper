@@ -1,0 +1,120 @@
+package com.beandirt.livepaper.wallpaper;
+
+import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.R.drawable;
+
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
+
+public class BitmapManager extends BitmapFactory{
+	private Bitmap bitmap;
+	private final Resources resources;
+	private final TimeCalculator timeCalculator;
+	
+	private int counter;
+	private int[] night_resources = {R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1,
+									R.drawable.night1};
+	
+	private int[] day_resources = {R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1,
+									R.drawable.day1};
+	
+	private static final String TAG = "BitmapManager";
+	
+	public BitmapManager(TimeCalculator timeCalculator, Resources resources){
+		this.resources = resources;
+		this.timeCalculator = timeCalculator;
+	}
+	
+	public int getDayImageCount(){
+		return day_resources.length;
+	}
+	
+	public int getNightImageCount(){
+		return night_resources.length;
+	}
+	
+	private float getCurrentInterval(){
+		if(timeCalculator.isDay()) {
+			Log.d(TAG,"using day interval");
+			return getDayInterval();
+		}
+		else{
+			Log.d(TAG,"using night interval");
+			return getNightInterval();
+		}
+	}
+	
+	public float getDayInterval(){
+		float span = this.timeCalculator.getSpan(true);
+		return span / day_resources.length;
+	}
+	
+	public float getNightInterval(){
+		float span = this.timeCalculator.getSpan(false);
+		return span / night_resources.length;
+	}
+	
+	public Bitmap getBitmap(){
+		int tempCounter = (int) Math.floor(timeCalculator.timePassedSinceSolarEvent() / getCurrentInterval());
+		int[] image_resources = timeCalculator.isDay() ? day_resources : night_resources;
+		
+		Log.d(TAG,String.valueOf(timeCalculator.timePassedSinceSolarEvent()));
+		Log.d(TAG,String.valueOf(getCurrentInterval()));
+		
+		Log.d(TAG,String.valueOf(tempCounter));
+		Log.d(TAG,String.valueOf(counter));
+		
+		if(tempCounter != counter || bitmap == null){
+			counter = tempCounter;
+			bitmap = BitmapManager.decodeResource(this.resources, image_resources[counter]);
+		}
+		
+		return bitmap;
+	}
+	
+	public int getBitmap(float timePassedSinceSolarEvent){
+		float currentTestTime = timePassedSinceSolarEvent + timeCalculator.getDawn();
+		boolean isDay = (currentTestTime >= timeCalculator.getDawn() && currentTestTime < timeCalculator.getDusk());
+		float currentInterval = (isDay) ? getDayInterval() : getNightInterval();
+
+		timePassedSinceSolarEvent = (isDay) ? timePassedSinceSolarEvent : currentTestTime - timeCalculator.getDusk();
+		Log.d("Testing","Current Interval: " + TimeCalculator.getPrettyTime( currentInterval ) + " (" + String.valueOf(currentInterval) + ")");
+		Log.d("Testing","Time Passed Since Solar Event: " + TimeCalculator.getPrettyTime( timePassedSinceSolarEvent ) + " (" + String.valueOf(timePassedSinceSolarEvent) + ")");
+		int tempInterval = (int) Math.floor(timePassedSinceSolarEvent / currentInterval);
+		return tempInterval;
+	}
+	
+	public int[] getDayResources(){
+		return day_resources;
+	}
+	
+	public int[] getNightResources(){
+		return night_resources;
+	}
+	
+	public int getCounter(){
+		return counter + 1;
+	}
+}

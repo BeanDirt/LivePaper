@@ -1,29 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
   xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="fill_parent"
   android:layout_height="fill_parent"
   android:gravity="center_horizontal|center_vertical">
   <Button
-    android:id="@+id/your_collections_button" 
-    android:text="Your Collections" 
-    android:layout_width="100dip" 
-    android:layout_height="60dip"
-    android:onClick="gotoMyPlaces">
-  </Button>
-  <Button
-    android:id="@+id/new_collections_button"
-    android:text="Get New Collections" 
     android:layout_width="100dip"
     android:layout_height="60dip"
-    android:layout_toRightOf="@id/your_collections_button"
-    android:onClick="gotoNewPlaces">
-  </Button>
+    android:text="My Collections"
+    android:onClick="gotoMyCollections" />
   <Button
-  	android:id="@+id/settings_button"
-    android:text="Settings" 
     android:layout_width="100dip"
     android:layout_height="60dip"
-    android:layout_toRightOf="@id/new_collections_button">
-  </Button>
-</RelativeLayout>
+    android:text="Get New Collections"
+    android:onClick="gotoNewCollections" />
+  <Button
+    android:layout_width="100dip"
+    android:layout_height="60dip"
+    android:text="Settings" />
+</LinearLayout>

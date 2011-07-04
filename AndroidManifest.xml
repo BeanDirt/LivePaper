@@ -31,7 +31,7 @@
 			</intent-filter>
 		</activity>
 		
-		<activity android:name=".dashboard.MyPlaces"
+		<activity android:name=".dashboard.CollectionDetail"
 					android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -45,9 +45,38 @@
 			</intent-filter>
 		</activity>
 		
+		<activity android:name=".dashboard.PlaceDetail"
+					android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+			</intent-filter>
+		</activity>
+		
+		<activity android:name=".dashboard.MyCollections"
+                  android:label="My Collections">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        
+        <activity android:name=".dashboard.NewCollections"
+                  android:label="New Collections">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".dashboard.Downloader"
+                  android:label="Downloader">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+		
     </application>
     
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
 	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
+	<uses-permission android:name="android.permission.INTERNET"></uses-permission>
 	<uses-permission android:name="android.permission.READ_PHONE_STATE"></uses-permission>
 </manifest>
