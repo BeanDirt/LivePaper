@@ -94,6 +94,7 @@ public class Downloader extends LivePaperActivity {
     			try {
 					JSONArray responsePhotos = response.getJSONObject("photoset").getJSONArray("photo");
 					String[] photoURLs = new String[responsePhotos.length()];
+					String[] photoFormats = new String[responsePhotos.length()];
 					for(int i = 0; i < responsePhotos.length(); i++){
 						String farm = responsePhotos.getJSONObject(i).getString("farm");
 						String id = responsePhotos.getJSONObject(i).getString("id");
@@ -102,9 +103,10 @@ public class Downloader extends LivePaperActivity {
 						String server = responsePhotos.getJSONObject(i).getString("server");
 						
 						photoURLs[i] = buildPhotoURL(farm, id, secret, server, format);
+						photoFormats[i] = format;
 					}
 					
-					downloadPhotos(photoURLs);
+					downloadPhotos(photoURLs, photoFormats);
 					
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -114,8 +116,8 @@ public class Downloader extends LivePaperActivity {
     	getPhotoList.execute();
 	}
 	
-	private void downloadPhotos(String[] photoURLs){
-    	new DownloadImageAsync().execute(photoURLs);
+	private void downloadPhotos(String[] photoURLs, String[] photoFormats){
+    	new DownloadImageAsync().execute(photoURLs, photoFormats);
 	}
 	
 	private String buildPhotoURL(String farm, String id, String secret, String server, String format){
@@ -136,13 +138,14 @@ public class Downloader extends LivePaperActivity {
 	private class DownloadImageAsync extends AsyncTask<String[], Integer, String>{
 
 		@Override
-		protected String doInBackground(String[]... urlArray) {
+		protected String doInBackground(String[]... photoArray) {
 			try{
 				int j = 0;
 				int count;
 				int totalSize = 0;
 				int downloaded = 0;
-				for(String urlString : urlArray[0]){
+				String[] urlArray = photoArray[0];
+				for(String urlString : urlArray){
 					URL url = new URL(urlString);
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 					conn.setRequestMethod("GET");
@@ -151,25 +154,31 @@ public class Downloader extends LivePaperActivity {
 					totalSize += conn.getContentLength();
 					
 					j++;
-					publishProgress((int)((j*100)/urlArray[0].length), null);
+					publishProgress((int)((j*100)/urlArray.length), null);
 				}
 				
 				int i = 0;
 				
-				for(String urlString : urlArray[0]){
-					i++;
+				for(String urlString : urlArray){
 					URL url = new URL(urlString);
 					URLConnection conn = url.openConnection();
 					conn.connect();
 					InputStream input = new BufferedInputStream(url.openStream(), 50000);
-		            OutputStream output = new FileOutputStream(getDir(String.valueOf(photosetRowId), MODE_PRIVATE).toString()+ "collectionId" + i);
+		            OutputStream output = new FileOutputStream(
+		            		getDir(String.valueOf(photosetRowId), MODE_PRIVATE).toString() + 
+		            		"/" + 
+		            		collectionRowId + 
+		            		i + 
+		            		"." + 
+		            		photoArray[1][i]);
 		            //new FileOutputStream()
 					byte data[] = new byte[1024];
 					while ((count = input.read(data)) != -1) {
 						downloaded += count;
 						output.write(data, 0, count);
-						publishProgress((int)((downloaded*100)/totalSize), i);
+						publishProgress((int)((downloaded*100)/totalSize), i + 1);
 					}
+					i++;
 				}
 			}
 			catch(Exception e){
@@ -186,6 +195,5 @@ public class Downloader extends LivePaperActivity {
 		protected void onPostExecute(String result){
 			progressDialog.dismiss();
 		}
-		
 	}
 }

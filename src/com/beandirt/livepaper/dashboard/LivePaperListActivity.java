@@ -29,10 +29,10 @@ public class LivePaperListActivity extends ListActivity {
 	}
 	
 	@Override
-	protected void onPause(){
+	protected void onStop(){
 		cursor.close();
 		dbAdapter.close();
-		super.onPause();
+		super.onStop();
 	}
 	
 }

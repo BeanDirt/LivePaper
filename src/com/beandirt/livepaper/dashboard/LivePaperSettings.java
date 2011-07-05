@@ -39,7 +39,7 @@ public class LivePaperSettings extends PreferenceActivity {
 			entryValues[i] = c.getString(0);
 			i++;
 		}
-		Log.d(TAG, ""+entries.length);
+
 		activeCollection.setEntries(entries);
 		activeCollection.setEntryValues(entryValues);
 	}

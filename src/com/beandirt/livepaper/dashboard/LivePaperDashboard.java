@@ -16,8 +16,6 @@ public class LivePaperDashboard extends LivePaperActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard);
-		String filesDir = getFilesDir().toString(); 
-		Log.d(TAG,getDir("baker_beach", MODE_PRIVATE).toString());
 	}
 	
 	@Override
