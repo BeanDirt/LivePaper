@@ -126,6 +126,18 @@ public class LivePaperDbAdapter {
 	        },  FIELD_COLLECTION + "=? AND " + FIELD_WIDTH + "=? AND " + FIELD_HEIGHT + "=?", new String[] {collectionId,width,height}, null, null, null);
 	}
 	
+	public Cursor fetchPhotoset(String photosetId){
+		return db.query(PHOTOSETS_TABLE, new String[] {
+				FIELD_ID,
+				FIELD_PHOTOSET_ID,
+	            FIELD_TITLE,
+	            FIELD_WIDTH,
+	            FIELD_HEIGHT,
+	            FIELD_COLLECTION,
+	            FIELD_ACTIVE,
+	        },  FIELD_PHOTOSET_ID + "=?", new String[] {photosetId}, null, null, null);
+	}
+	
 	
 	public int updateCollection(Collection collection){
 		ContentValues updateValues = createContentValues(collection);

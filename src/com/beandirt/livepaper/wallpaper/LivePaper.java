@@ -111,7 +111,7 @@ public class LivePaper extends WallpaperService {
 				}
 			});
 			
-			bitmapManager = new BitmapManager(timeCalculator, getResources());
+			bitmapManager = new BitmapManager(timeCalculator, getResources(), getApplicationContext());
 			currentBitmap = bitmapManager.getBitmap();
 			drawBitmap(false);
 		}

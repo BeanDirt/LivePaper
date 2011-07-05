@@ -1,11 +1,20 @@
 package com.beandirt.livepaper.wallpaper;
 
-import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.R.drawable;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 
+import com.beandirt.livepaper.R;
+
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class BitmapManager extends BitmapFactory{
@@ -14,37 +23,41 @@ public class BitmapManager extends BitmapFactory{
 	private final TimeCalculator timeCalculator;
 	
 	private int counter;
-	private int[] night_resources = {R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1,
-									R.drawable.night1};
-	
-	private int[] day_resources = {R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1,
-									R.drawable.day1};
+	private File[] day_resources;
+	private File[] night_resources;
 	
 	private static final String TAG = "BitmapManager";
 	
-	public BitmapManager(TimeCalculator timeCalculator, Resources resources){
+	public BitmapManager(TimeCalculator timeCalculator, Resources resources, Context context){
 		this.resources = resources;
 		this.timeCalculator = timeCalculator;
+		
+		populateBitmaps(context);
+	}
+	
+	private void populateBitmaps(Context context){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+		String collectionId = sp.getString("collectionId", null);
+		String photosetId = sp.getString("photosetId", null);
+		
+		day_resources = new File[14];
+		night_resources = new File[10];
+		
+		File rootDir = context.getDir(photosetId, Activity.MODE_PRIVATE);
+		if(rootDir.isDirectory()){
+			String[] totalFiles = rootDir.list();
+			for(int i = 0; i < totalFiles.length; i++){
+				int indexOfCollection = totalFiles[i].indexOf(collectionId) + 1;
+				int indexOfDot = totalFiles[i].indexOf(".");
+				int fileIndex = Integer.valueOf(totalFiles[i].substring(indexOfCollection, indexOfDot));
+				File file = new File(rootDir.toString() + "/" + totalFiles[i]);
+				
+				if(fileIndex > 13)
+					night_resources[fileIndex - 14] = file;
+				else
+					day_resources[fileIndex] = file;
+			}
+		}
 	}
 	
 	public int getDayImageCount(){
@@ -78,7 +91,7 @@ public class BitmapManager extends BitmapFactory{
 	
 	public Bitmap getBitmap(){
 		int tempCounter = (int) Math.floor(timeCalculator.timePassedSinceSolarEvent() / getCurrentInterval());
-		int[] image_resources = timeCalculator.isDay() ? day_resources : night_resources;
+		File[] image_resources = timeCalculator.isDay() ? day_resources : night_resources;
 		
 		Log.d(TAG,String.valueOf(timeCalculator.timePassedSinceSolarEvent()));
 		Log.d(TAG,String.valueOf(getCurrentInterval()));
@@ -88,7 +101,9 @@ public class BitmapManager extends BitmapFactory{
 		
 		if(tempCounter != counter || bitmap == null){
 			counter = tempCounter;
-			bitmap = BitmapManager.decodeResource(this.resources, image_resources[counter]);
+			File file = image_resources[counter];
+			bitmap = BitmapManager.decodeFile(file.getPath());
+			//bitmap = BitmapManager.decodeResource(this.resources, R.drawable.sf_bg);
 		}
 		
 		return bitmap;
@@ -106,11 +121,11 @@ public class BitmapManager extends BitmapFactory{
 		return tempInterval;
 	}
 	
-	public int[] getDayResources(){
+	public File[] getDayResources(){
 		return day_resources;
 	}
 	
-	public int[] getNightResources(){
+	public File[] getNightResources(){
 		return night_resources;
 	}
 	

@@ -15,10 +15,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -33,6 +35,7 @@ public class Downloader extends LivePaperActivity {
 	private static final String TAG = "Downloader";
 	private long collectionRowId;
 	private long photosetRowId;
+	private Cursor cursor;
 	
 	private ProgressDialog progressDialog;
 	
@@ -51,6 +54,14 @@ public class Downloader extends LivePaperActivity {
 		
     	try{
 			String photosetId = getPhotosetId(collectionRowId);
+			photosetRowId = getPhotosetRowId(photosetId);
+			
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		    SharedPreferences.Editor editor = sp.edit();
+		    editor.putString("photosetId", String.valueOf(photosetRowId));
+		    editor.commit();
+			
+			startManagingCursor(cursor);
 			getPhotoList(photosetId);
 		}
 		catch(Exception e){
@@ -59,8 +70,16 @@ public class Downloader extends LivePaperActivity {
 		}
 	}
 	
+    private long getPhotosetRowId(String photosetId){
+    	cursor = dbAdapter.fetchPhotoset(photosetId);
+    	cursor.moveToFirst();
+    	long photosetRowId = cursor.getLong(0);
+    	cursor.close();
+    	return photosetRowId;
+    }
+    
     private String getPhotosetId(long collectionRowId) throws CursorIndexOutOfBoundsException, NullPointerException{
-		Cursor cursor = dbAdapter.fetchCollection(collectionRowId);
+		cursor = dbAdapter.fetchCollection(collectionRowId);
 		cursor.moveToFirst();
 		String collectionId = cursor.getString(1);
 		Display display = getWindowManager().getDefaultDisplay(); 
@@ -68,13 +87,10 @@ public class Downloader extends LivePaperActivity {
 		String width = String.valueOf(display.getWidth());
 		String height = String.valueOf(display.getHeight());
 		
-		cursor.close();
-		
 		cursor = dbAdapter.fetchPhotoset(collectionId, width, height);
 		cursor.moveToFirst();
 		String photosetId = cursor.getString(1);
-		photosetRowId = cursor.getLong(0);
-		startManagingCursor(cursor);
+		
 		return photosetId;
 	}
     

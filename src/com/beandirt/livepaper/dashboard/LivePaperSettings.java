@@ -27,7 +27,7 @@ public class LivePaperSettings extends PreferenceActivity {
 	
 	private void populateCollections(){
 		
-		ListPreference activeCollection = (ListPreference) getPreferenceManager().findPreference("active_collection");
+		ListPreference activeCollection = (ListPreference) getPreferenceManager().findPreference("collectionId");
 		Cursor c = dbAdapter.fetchPurchasedCollections(true);
 		startManagingCursor(c);
 		CharSequence[] entries = new String[c.getCount()];

@@ -2,6 +2,7 @@ package com.beandirt.livepaper.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
@@ -19,16 +20,10 @@ public class LivePaperDashboard extends LivePaperActivity {
 	}
 	
 	@Override
-	protected void onResume() {
+	protected void onStart() {
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 		checkForUpdates();
-		super.onResume();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		dbAdapter.close();
-		super.onDestroy();
+		super.onStart();
 	}
 	
 	public void gotoNewCollections(View v){

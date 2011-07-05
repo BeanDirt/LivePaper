@@ -3,7 +3,7 @@
   xmlns:android="http://schemas.android.com/apk/res/android">
   
   <ListPreference
-    android:key="active_collection"
+    android:key="collectionId"
     android:title="Active Collection"
     android:summary="Choose the current wallpaper collection"
     android:dialogTitle="Choose a collections" />

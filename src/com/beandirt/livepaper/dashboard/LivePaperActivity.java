@@ -29,13 +29,14 @@ public class LivePaperActivity extends Activity {
 	private ProgressDialog dialog;
 	
 	protected LivePaperDbAdapter dbAdapter;
+	AsyncTask<Object, Object, JSONObject> getCollections;
 	
 	protected void checkForUpdates(){
     	dialog = ProgressDialog.show(this, "", 
                 "Checking for updates...", true);
         dialog.show();
         
-        AsyncTask<Object, Object, JSONObject> getCollections = new AsyncTask<Object, Object, JSONObject>() {
+        getCollections = new AsyncTask<Object, Object, JSONObject>() {
 
     		@Override
     		protected JSONObject doInBackground(Object... params) {
@@ -108,5 +109,13 @@ public class LivePaperActivity extends Activity {
 			}
 		}
 		return updatedFlag;
+	}
+	
+	@Override
+	protected void onStop(){
+		dialog.dismiss();
+		getCollections.cancel(true);
+		dbAdapter.close();
+		super.onStop();
 	}
 }
