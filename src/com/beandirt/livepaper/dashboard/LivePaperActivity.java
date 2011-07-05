@@ -82,7 +82,7 @@ public class LivePaperActivity extends Activity {
 					e.printStackTrace();
 				}
 				finally{
-					dialog.hide();
+					dialog.dismiss();
 				}
     		}
     	};

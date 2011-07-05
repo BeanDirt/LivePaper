@@ -5,6 +5,7 @@ import java.util.List;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -28,9 +29,10 @@ public class LivePaperListActivity extends ListActivity {
 	}
 	
 	@Override
-	protected void onDestroy(){
+	protected void onPause(){
+		cursor.close();
 		dbAdapter.close();
-		super.onDestroy();
+		super.onPause();
 	}
 	
 }

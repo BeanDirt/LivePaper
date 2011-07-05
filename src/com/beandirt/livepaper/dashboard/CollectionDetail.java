@@ -38,9 +38,9 @@ public class CollectionDetail extends LivePaperActivity {
 	}
 	
 	@Override
-	protected void onDestroy() {
+	protected void onPause() {
 		dbAdapter.close();
-		super.onDestroy();
+		super.onPause();
 	}
 
 	@Override

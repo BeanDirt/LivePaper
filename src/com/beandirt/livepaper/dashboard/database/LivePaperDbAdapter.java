@@ -42,7 +42,7 @@ public class LivePaperDbAdapter {
 	}
 	
 	public LivePaperDbAdapter open() throws SQLException {
-       	if(db == null || !db.isOpen()){
+       	if(db == null || !db.isOpen()){ 
        		dbHelper = new LivePaperDatabaseHelper(context);
        		db = dbHelper.getWritableDatabase();
        	}
@@ -51,6 +51,7 @@ public class LivePaperDbAdapter {
 	
 	public void close(){
 		dbHelper.close();
+		db.close();
 	}
 	
 	public Collection createCollection(Collection collection){
@@ -129,6 +130,7 @@ public class LivePaperDbAdapter {
 	public int updateCollection(Collection collection){
 		ContentValues updateValues = createContentValues(collection);
 		String collectionId = collection.getId();
+		Log.d(TAG, ""+db.isOpen() + "  " + "collection update");
 		return db.update(COLLECTIONS_TABLE, updateValues, FIELD_COLLECTION_ID + "=?", new String[] {collectionId});
 	}
 	
@@ -136,6 +138,7 @@ public class LivePaperDbAdapter {
 		ContentValues updateValues = createContentValues(photoset);
 		String photosetId = photoset.getId();
 		String collectionId = photoset.getCollection();
+		Log.d(TAG, ""+db.isOpen());
 		return db.update(PHOTOSETS_TABLE, updateValues, FIELD_PHOTOSET_ID + "=? AND " + FIELD_COLLECTION + "=?", new String[] {photosetId,collectionId});
 	}
 	
