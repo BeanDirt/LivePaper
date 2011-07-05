@@ -15,7 +15,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
 import com.beandirt.livepaper.dashboard.model.Collection;

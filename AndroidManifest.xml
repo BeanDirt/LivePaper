@@ -14,7 +14,7 @@
 			<intent-filter>
 				<action android:name="android.service.wallpaper.WallpaperService" />
 			</intent-filter>
-			<meta-data android:name="android.service.wallpaper" android:resource="@xml/live_paper_layout" />
+			<meta-data android:name="android.service.wallpaper" android:resource="@xml/livepaper_layout" />
 		</service>
 	
 		<activity android:name=".LivePaperSettings"
@@ -32,20 +32,6 @@
 		</activity>
 		
 		<activity android:name=".dashboard.CollectionDetail"
-					android:theme="@android:style/Theme.NoTitleBar">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-			</intent-filter>
-		</activity>
-		
-		<activity android:name=".dashboard.NewPlaces"
-					android:theme="@android:style/Theme.NoTitleBar">
-			<intent-filter>
-				<action android:name="android.intent.action.VIEW" />
-			</intent-filter>
-		</activity>
-		
-		<activity android:name=".dashboard.PlaceDetail"
 					android:theme="@android:style/Theme.NoTitleBar">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
@@ -72,6 +58,14 @@
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
+        
+        <activity android:name=".dashboard.LivePaperSettings"
+					android:label="@string/dashboardLabel"
+					android:theme="@android:style/Theme.NoTitleBar">
+			<intent-filter>
+				<action android:name="android.intent.action.VIEW" />
+			</intent-filter>
+		</activity>
 		
     </application>
     

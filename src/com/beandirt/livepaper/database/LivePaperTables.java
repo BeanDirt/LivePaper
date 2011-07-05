@@ -1,4 +1,4 @@
-package com.beandirt.livepaper.dashboard.database;
+package com.beandirt.livepaper.database;
 
 import android.provider.BaseColumns;
 

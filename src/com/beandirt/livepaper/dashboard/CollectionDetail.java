@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 public class CollectionDetail extends LivePaperActivity {
 
 	@SuppressWarnings("unused")

@@ -24,14 +24,15 @@ import android.view.Display;
 import android.view.View;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 
 public class Downloader extends LivePaperActivity {
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = "Downloader";
-	private long collectionId;
+	private long collectionRowId;
+	private long photosetRowId;
 	
 	private ProgressDialog progressDialog;
 	
@@ -49,7 +50,7 @@ public class Downloader extends LivePaperActivity {
     	progressDialog.show();
 		
     	try{
-			String photosetId = getPhotosetId(collectionId);
+			String photosetId = getPhotosetId(collectionRowId);
 			getPhotoList(photosetId);
 		}
 		catch(Exception e){
@@ -72,6 +73,7 @@ public class Downloader extends LivePaperActivity {
 		cursor = dbAdapter.fetchPhotoset(collectionId, width, height);
 		cursor.moveToFirst();
 		String photosetId = cursor.getString(1);
+		photosetRowId = cursor.getLong(0);
 		startManagingCursor(cursor);
 		return photosetId;
 	}
@@ -126,7 +128,7 @@ public class Downloader extends LivePaperActivity {
 	
 	@Override
 	protected void onResume(){
-		collectionId = getIntent().getExtras().getLong("rowid");
+		collectionRowId = getIntent().getExtras().getLong("rowid");
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 		super.onResume();
 	}
@@ -160,7 +162,8 @@ public class Downloader extends LivePaperActivity {
 					URLConnection conn = url.openConnection();
 					conn.connect();
 					InputStream input = new BufferedInputStream(url.openStream(), 50000);
-		            OutputStream output = new FileOutputStream("/sdcard/some_photo_" + i);
+		            OutputStream output = new FileOutputStream(getDir(String.valueOf(photosetRowId), MODE_PRIVATE).toString()+ "collectionId" + i);
+		            //new FileOutputStream()
 					byte data[] = new byte[1024];
 					while ((count = input.read(data)) != -1) {
 						downloaded += count;

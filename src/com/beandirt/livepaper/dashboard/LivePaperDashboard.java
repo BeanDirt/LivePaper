@@ -2,10 +2,11 @@ package com.beandirt.livepaper.dashboard;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class LivePaperDashboard extends LivePaperActivity {
 	
@@ -15,6 +16,8 @@ public class LivePaperDashboard extends LivePaperActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.dashboard);
+		String filesDir = getFilesDir().toString(); 
+		Log.d(TAG,getDir("baker_beach", MODE_PRIVATE).toString());
 	}
 	
 	@Override
@@ -37,6 +40,11 @@ public class LivePaperDashboard extends LivePaperActivity {
 	
 	public void gotoMyCollections(View v){
 		Intent intent = new Intent(this, MyCollections.class);
+		startActivity(intent);
+	}
+	
+	public void gotoSettings(View v){
+		Intent intent = new Intent(this, LivePaperSettings.class);
 		startActivity(intent);
 	}
 }

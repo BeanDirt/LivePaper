@@ -1,15 +1,15 @@
-package com.beandirt.livepaper.dashboard.database;
+package com.beandirt.livepaper.database;
 
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.COLLECTIONS_TABLE;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.PHOTOSETS_TABLE;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_COLLECTION_ID;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_ENABLED;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_ID;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_PRICE;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_PURCHASED;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_TITLE;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Collections.FIELD_TRIAL;
-import static com.beandirt.livepaper.dashboard.database.LivePaperTables.Photosets.*;
+import static com.beandirt.livepaper.database.LivePaperTables.COLLECTIONS_TABLE;
+import static com.beandirt.livepaper.database.LivePaperTables.PHOTOSETS_TABLE;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_COLLECTION_ID;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_ENABLED;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_ID;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_PRICE;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_PURCHASED;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_TITLE;
+import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_TRIAL;
+import static com.beandirt.livepaper.database.LivePaperTables.Photosets.*;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

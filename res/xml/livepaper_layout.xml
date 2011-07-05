@@ -2,4 +2,4 @@
 <wallpaper xmlns:android="http://schemas.android.com/apk/res/android"
 		   android:thumbnail="@drawable/livepaper_thumb"
 		   android:description="@string/description"
-		   android:settingsActivity="com.beandirt.livepaper.LivePaperSettings" />
+		   android:settingsActivity="com.beandirt.livepaper.dashboard.LivePaperSettings" />

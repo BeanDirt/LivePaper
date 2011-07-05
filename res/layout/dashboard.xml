@@ -17,5 +17,6 @@
   <Button
     android:layout_width="100dip"
     android:layout_height="60dip"
-    android:text="Settings" />
+    android:text="Settings"
+    android:onClick="gotoSettings" />
 </LinearLayout>

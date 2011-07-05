@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
-import com.beandirt.livepaper.dashboard.database.LivePaperDbAdapter;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 import com.beandirt.livepaper.dashboard.model.Collection;
 
 public class LivePaperListActivity extends ListActivity {
