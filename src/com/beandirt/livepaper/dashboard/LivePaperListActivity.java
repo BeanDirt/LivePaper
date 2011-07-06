@@ -25,14 +25,7 @@ public class LivePaperListActivity extends ListActivity {
 		Intent intent = new Intent(this,CollectionDetail.class);
 		cursor.moveToPosition(position);
 		intent.putExtra("rowid", cursor.getLong(0));
+		cursor.close();
 		startActivity(intent);
 	}
-	
-	@Override
-	protected void onStop(){
-		cursor.close();
-		dbAdapter.close();
-		super.onStop();
-	}
-	
 }

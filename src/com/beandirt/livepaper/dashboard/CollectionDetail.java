@@ -39,9 +39,11 @@ public class CollectionDetail extends LivePaperActivity {
 		
 		collectionId = getIntent().getExtras().getLong("rowid");
 		
-		new GetPreviewImageURLAsync().execute(getPhotosetId(collectionId));
-		
         setFonts();
+	}
+	
+	private void init(){
+		new GetPreviewImageURLAsync().execute(getPhotosetId(collectionId));
 	}
 	
 	private void setFonts(){
@@ -58,6 +60,7 @@ public class CollectionDetail extends LivePaperActivity {
 	
 	private String getPhotosetId(long collectionRowId) throws CursorIndexOutOfBoundsException, NullPointerException{
 		cursor = dbAdapter.fetchCollection(collectionRowId);
+		startManagingCursor(cursor);
 		cursor.moveToFirst();
 		String collectionId = cursor.getString(1);
 		Display display = getWindowManager().getDefaultDisplay(); 
@@ -68,7 +71,6 @@ public class CollectionDetail extends LivePaperActivity {
 		cursor = dbAdapter.fetchPhotoset(collectionId, width, height);
 		cursor.moveToFirst();
 		String photosetId = cursor.getString(1);
-		cursor.close();
 		return photosetId;
 	}
 	
@@ -81,6 +83,7 @@ public class CollectionDetail extends LivePaperActivity {
 	@Override
 	protected void onStart(){
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
+		init();
 		super.onStart();
 	}
 	

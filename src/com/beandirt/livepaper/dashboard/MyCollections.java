@@ -34,4 +34,11 @@ public class MyCollections extends LivePaperListActivity {
 		populateList();
 		super.onStart();
 	}
+	
+	@Override
+	protected void onStop(){
+		cursor.close();
+		dbAdapter.close();
+		super.onStop();
+	}
 }
