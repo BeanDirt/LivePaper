@@ -13,7 +13,7 @@ public class LivePaperSettings extends PreferenceActivity {
 
 	private static final String TAG = "LivePaperSettings";
 	private LivePaperDbAdapter dbAdapter; 
-	
+	private Cursor cursor;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 
@@ -28,15 +28,15 @@ public class LivePaperSettings extends PreferenceActivity {
 	private void populateCollections(){
 		
 		ListPreference activeCollection = (ListPreference) getPreferenceManager().findPreference("collectionId");
-		Cursor c = dbAdapter.fetchPurchasedCollections(true);
-		startManagingCursor(c);
-		CharSequence[] entries = new String[c.getCount()];
-		CharSequence[] entryValues = new String[c.getCount()];
+		cursor = dbAdapter.fetchPurchasedCollections(true);
+		startManagingCursor(cursor);
+		CharSequence[] entries = new String[cursor.getCount()];
+		CharSequence[] entryValues = new String[cursor.getCount()];
 		
 		int i = 0;
-		while(c.moveToNext()){
-			entries[i] = c.getString(2);
-			entryValues[i] = c.getString(0);
+		while(cursor.moveToNext()){
+			entries[i] = cursor.getString(2);
+			entryValues[i] = cursor.getString(0);
 			i++;
 		}
 
@@ -44,16 +44,9 @@ public class LivePaperSettings extends PreferenceActivity {
 		activeCollection.setEntryValues(entryValues);
 	}
 	
-	@Override
-	protected void onStart(){
+	protected void onResume(){
+		super.onResume();
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 		init();
-		super.onStart();
-	}
-	
-	@Override
-	protected void onStop(){
-		dbAdapter.close();
-		super.onStop();
 	}
 }

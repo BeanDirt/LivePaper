@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -29,7 +30,7 @@ import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 
-public class Downloader extends LivePaperActivity {
+public class Downloader extends Activity {
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = "Downloader";
@@ -38,6 +39,7 @@ public class Downloader extends LivePaperActivity {
 	private Cursor cursor;
 	
 	private ProgressDialog progressDialog;
+	protected LivePaperDbAdapter dbAdapter;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +63,6 @@ public class Downloader extends LivePaperActivity {
 		    editor.putString("photosetId", String.valueOf(photosetRowId));
 		    editor.commit();
 			
-			startManagingCursor(cursor);
 			getPhotoList(photosetId);
 		}
 		catch(Exception e){
@@ -152,13 +153,6 @@ public class Downloader extends LivePaperActivity {
 		retrievePhotos();
 	}
 	
-	@Override
-	protected void onStart(){
-		collectionRowId = getIntent().getExtras().getLong("rowid");
-		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
-		super.onStart();
-	}
-	
 	private class DownloadImageAsync extends AsyncTask<String[], Integer, String>{
 
 		@Override
@@ -219,5 +213,11 @@ public class Downloader extends LivePaperActivity {
 		protected void onPostExecute(String result){
 			progressDialog.dismiss();
 		}
+	}
+	
+	protected void onResume(){
+		super.onResume();
+		collectionRowId = getIntent().getExtras().getLong("rowid");
+		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 	}
 }

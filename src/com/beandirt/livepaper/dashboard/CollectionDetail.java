@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
@@ -15,6 +16,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -23,14 +25,17 @@ import android.widget.TextView;
 import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
-public class CollectionDetail extends LivePaperActivity {
+public class CollectionDetail extends Activity {
 
 	private Cursor cursor;
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = "CollectionDetail";
-	
 	private long collectionId;
+	
+	protected LivePaperDbAdapter dbAdapter;
+	
+	RelativeLayout layout;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +45,12 @@ public class CollectionDetail extends LivePaperActivity {
 		collectionId = getIntent().getExtras().getLong("rowid");
 		
         setFonts();
+        layout = (RelativeLayout) findViewById(R.id.collection_layout);
 	}
 	
 	private void init(){
-		new GetPreviewImageURLAsync().execute(getPhotosetId(collectionId));
+		String photosetId = getPhotosetId(collectionId);
+		new GetPreviewImageURLAsync().execute(photosetId);
 	}
 	
 	private void setFonts(){
@@ -72,19 +79,6 @@ public class CollectionDetail extends LivePaperActivity {
 		cursor.moveToFirst();
 		String photosetId = cursor.getString(1);
 		return photosetId;
-	}
-	
-	@Override
-	protected void onStop() {
-		dbAdapter.close();
-		super.onStop();
-	}
-	
-	@Override
-	protected void onStart(){
-		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
-		init();
-		super.onStart();
 	}
 	
 	private class GetPreviewImageURLAsync extends AsyncTask<String, Integer, JSONObject>{
@@ -139,7 +133,6 @@ public class CollectionDetail extends LivePaperActivity {
 		
 		protected void onPostExecute(BitmapDrawable result){
 			if(result != null){
-				RelativeLayout layout = (RelativeLayout) findViewById(R.id.collection_layout);
 				layout.setBackgroundDrawable(result);
 			}
 		}
@@ -151,5 +144,12 @@ public class CollectionDetail extends LivePaperActivity {
 	
 	private String buildPhotoURL(String farm, String id, String secret, String server, String format){
 		return "http://farm" + farm + ".static.flickr.com/" + server + "/" + id + "_" + secret + "_o." + format;
+	}
+	
+	protected void onResume(){
+		super.onResume();
+		Log.d(TAG, "onResume()");
+		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
+		init();
 	}
 }

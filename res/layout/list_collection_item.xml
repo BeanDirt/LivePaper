@@ -5,6 +5,7 @@
   android:layout_height="fill_parent">
   <TextView
     android:id="@+id/collection_title"
+    android:text="something"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="10dip" />

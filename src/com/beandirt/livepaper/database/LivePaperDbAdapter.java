@@ -50,6 +50,7 @@ public class LivePaperDbAdapter {
     }
 	
 	public void close(){
+		Log.i(TAG, "Database was closed");
 		dbHelper.close();
 		db.close();
 	}
