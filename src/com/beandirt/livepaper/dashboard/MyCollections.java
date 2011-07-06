@@ -3,6 +3,7 @@ package com.beandirt.livepaper.dashboard;
 import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_TITLE;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -28,9 +29,9 @@ public class MyCollections extends LivePaperListActivity {
 	}
 	
 	@Override
-	protected void onResume(){
+	protected void onStart(){
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 		populateList();
-		super.onResume();
+		super.onStart();
 	}
 }

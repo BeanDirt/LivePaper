@@ -117,6 +117,14 @@ public class Downloader extends LivePaperActivity {
 						String secret = responsePhotos.getJSONObject(i).getString("originalsecret");
 						String format = responsePhotos.getJSONObject(i).getString("originalformat");
 						String server = responsePhotos.getJSONObject(i).getString("server");
+						String tags = responsePhotos.getJSONObject(i).getString("tags");
+						
+						String[] tagsArray = tags.split(" ");
+						for(int j = 0; j < tagsArray.length; j++){
+							if("preview".equals(tagsArray[j])){
+								continue;
+							}
+						}
 						
 						photoURLs[i] = buildPhotoURL(farm, id, secret, server, format);
 						photoFormats[i] = format;

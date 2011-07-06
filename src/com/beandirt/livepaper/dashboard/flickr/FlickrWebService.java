@@ -158,7 +158,7 @@ public class FlickrWebService {
 		ArrayList<NameValuePair> postParameters = new ArrayList<NameValuePair>();
 		postParameters.add(new BasicNameValuePair("api_key", KEY));
 		postParameters.add(new BasicNameValuePair("auth_token", TOKEN));
-		postParameters.add(new BasicNameValuePair("extras", "original_format"));
+		postParameters.add(new BasicNameValuePair("extras", "tags, original_format"));
 		postParameters.add(new BasicNameValuePair("format", "json"));
 		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_PHOTO_LIST.getMethod()));
 		postParameters.add(new BasicNameValuePair("photoset_id", photosetId));
