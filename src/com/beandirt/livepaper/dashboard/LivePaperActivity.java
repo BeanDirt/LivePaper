@@ -113,9 +113,9 @@ public class LivePaperActivity extends Activity {
 	
 	@Override
 	protected void onStop(){
-		dialog.dismiss();
-		getCollections.cancel(true);
-		dbAdapter.close();
+		if(dialog != null) dialog.dismiss();
+		if(getCollections != null) getCollections.cancel(true);
+		if(dbAdapter != null) dbAdapter.close();
 		super.onStop();
 	}
 }
