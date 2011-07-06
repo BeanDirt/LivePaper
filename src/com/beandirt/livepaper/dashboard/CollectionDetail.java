@@ -39,9 +39,11 @@ public class CollectionDetail extends LivePaperActivity {
 		
 		collectionId = getIntent().getExtras().getLong("rowid");
 		
-		new GetPreviewImageURLAsync().execute(getPhotosetId(collectionId));
-		
         setFonts();
+	}
+	
+	private void init(){
+		new GetPreviewImageURLAsync().execute(getPhotosetId(collectionId));
 	}
 	
 	private void setFonts(){
@@ -81,6 +83,7 @@ public class CollectionDetail extends LivePaperActivity {
 	@Override
 	protected void onStart(){
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
+		init();
 		super.onStart();
 	}
 	
