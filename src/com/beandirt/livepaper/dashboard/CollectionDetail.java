@@ -60,6 +60,7 @@ public class CollectionDetail extends LivePaperActivity {
 	
 	private String getPhotosetId(long collectionRowId) throws CursorIndexOutOfBoundsException, NullPointerException{
 		cursor = dbAdapter.fetchCollection(collectionRowId);
+		startManagingCursor(cursor);
 		cursor.moveToFirst();
 		String collectionId = cursor.getString(1);
 		Display display = getWindowManager().getDefaultDisplay(); 
@@ -70,7 +71,6 @@ public class CollectionDetail extends LivePaperActivity {
 		cursor = dbAdapter.fetchPhotoset(collectionId, width, height);
 		cursor.moveToFirst();
 		String photosetId = cursor.getString(1);
-		cursor.close();
 		return photosetId;
 	}
 	

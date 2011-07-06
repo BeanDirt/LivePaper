@@ -153,10 +153,10 @@ public class Downloader extends LivePaperActivity {
 	}
 	
 	@Override
-	protected void onResume(){
+	protected void onStart(){
 		collectionRowId = getIntent().getExtras().getLong("rowid");
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
-		super.onResume();
+		super.onStart();
 	}
 	
 	private class DownloadImageAsync extends AsyncTask<String[], Integer, String>{
