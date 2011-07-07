@@ -58,11 +58,6 @@ public class Downloader extends Activity {
 			String photosetId = getPhotosetId(collectionRowId);
 			photosetRowId = getPhotosetRowId(photosetId);
 			
-			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-		    SharedPreferences.Editor editor = sp.edit();
-		    editor.putString("photosetId", String.valueOf(photosetRowId));
-		    editor.commit();
-			
 			getPhotoList(photosetId);
 		}
 		catch(Exception e){
@@ -131,7 +126,6 @@ public class Downloader extends Activity {
 						photoFormats[k] = format;
 						k++;
 					}
-					Log.d(TAG, String.valueOf(photoURLs.length));
 					downloadPhotos(photoURLs, photoFormats);
 					
 				} catch (JSONException e) {
@@ -199,7 +193,6 @@ public class Downloader extends Activity {
 		            		i + 
 		            		"." + 
 		            		photoArray[1][i]);
-		            //new FileOutputStream()
 					byte data[] = new byte[1024];
 					while ((count = input.read(data)) != -1) {
 						downloaded += count;
@@ -221,7 +214,17 @@ public class Downloader extends Activity {
 		}
 		
 		protected void onPostExecute(String result){
-			progressDialog.dismiss();
+			
+			cursor = dbAdapter.fetchPurchasedCollections(true);
+			if(cursor.getCount() == 1){
+				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+				SharedPreferences.Editor editor = sp.edit();
+				editor.putString("collectionId", String.valueOf(collectionRowId));
+				editor.putString("photosetId", String.valueOf(photosetRowId));
+				editor.commit();
+			}
+			
+		    progressDialog.dismiss();
 		}
 	}
 	
