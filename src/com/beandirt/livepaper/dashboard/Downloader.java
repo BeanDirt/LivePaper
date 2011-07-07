@@ -73,14 +73,15 @@ public class Downloader extends Activity {
 	
     private long getPhotosetRowId(String photosetId){
     	cursor = dbAdapter.fetchPhotoset(photosetId);
+    	startManagingCursor(cursor);
     	cursor.moveToFirst();
     	long photosetRowId = cursor.getLong(0);
-    	cursor.close();
     	return photosetRowId;
     }
     
     private String getPhotosetId(long collectionRowId) throws CursorIndexOutOfBoundsException, NullPointerException{
 		cursor = dbAdapter.fetchCollection(collectionRowId);
+		startManagingCursor(cursor);
 		cursor.moveToFirst();
 		String collectionId = cursor.getString(1);
 		Display display = getWindowManager().getDefaultDisplay(); 
@@ -110,8 +111,9 @@ public class Downloader extends Activity {
     			Log.d(TAG, response.toString());
     			try {
 					JSONArray responsePhotos = response.getJSONObject("photoset").getJSONArray("photo");
-					String[] photoURLs = new String[responsePhotos.length()];
-					String[] photoFormats = new String[responsePhotos.length()];
+					String[] photoURLs = new String[responsePhotos.length() - 1];
+					String[] photoFormats = new String[responsePhotos.length() - 1];
+					int k = 0;
 					for(int i = 0; i < responsePhotos.length(); i++){
 						String farm = responsePhotos.getJSONObject(i).getString("farm");
 						String id = responsePhotos.getJSONObject(i).getString("id");
@@ -121,16 +123,15 @@ public class Downloader extends Activity {
 						String tags = responsePhotos.getJSONObject(i).getString("tags");
 						
 						String[] tagsArray = tags.split(" ");
-						for(int j = 0; j < tagsArray.length; j++){
-							if("preview".equals(tagsArray[j])){
-								continue;
-							}
+						if(hasPreview(tagsArray)) {
+							continue;
 						}
 						
-						photoURLs[i] = buildPhotoURL(farm, id, secret, server, format);
-						photoFormats[i] = format;
+						photoURLs[k] = buildPhotoURL(farm, id, secret, server, format);
+						photoFormats[k] = format;
+						k++;
 					}
-					
+					Log.d(TAG, String.valueOf(photoURLs.length));
 					downloadPhotos(photoURLs, photoFormats);
 					
 				} catch (JSONException e) {
@@ -139,6 +140,15 @@ public class Downloader extends Activity {
     		}
     	};
     	getPhotoList.execute();
+	}
+	
+	private boolean hasPreview(String[] tags){
+		for(int j = 0; j < tags.length; j++){
+			if("preview".equals(tags[j])){
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private void downloadPhotos(String[] photoURLs, String[] photoFormats){
