@@ -16,6 +16,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
@@ -225,6 +226,8 @@ public class Downloader extends Activity {
 			}
 			
 		    progressDialog.dismiss();
+		    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
+		    startActivity(intent);
 		}
 	}
 	

@@ -31,7 +31,7 @@ public class CollectionDetail extends Activity {
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = "CollectionDetail";
-	private long collectionId;
+	private long collectionRowId;
 	
 	protected LivePaperDbAdapter dbAdapter;
 	
@@ -42,15 +42,20 @@ public class CollectionDetail extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.collection_detail);
 		
-		collectionId = getIntent().getExtras().getLong("rowid");
+		collectionRowId = getIntent().getExtras().getLong("rowid");
 		
         setFonts();
         layout = (RelativeLayout) findViewById(R.id.collection_layout);
 	}
 	
 	private void init(){
-		String photosetId = getPhotosetId(collectionId);
+		String photosetId = getPhotosetId(collectionRowId);
 		new GetPreviewImageURLAsync().execute(photosetId);
+		populate();
+	}
+	
+	private void populate(){
+		
 	}
 	
 	private void setFonts(){
@@ -61,7 +66,7 @@ public class CollectionDetail extends Activity {
 	
 	public void goToDownloader(View v){
 		Intent intent = new Intent(this, Downloader.class);
-		intent.putExtra("rowid", collectionId);
+		intent.putExtra("rowid", collectionRowId);
 		startActivity(intent);
 	}
 	
