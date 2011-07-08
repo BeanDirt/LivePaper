@@ -76,12 +76,8 @@ public class CollectionDetail extends Activity {
 		String height = String.valueOf(display.getHeight());
 		
 		cursor = dbAdapter.fetchPhotoset(collectionId, width, height);
-		Log.d(TAG, width + "x" + height);
-		Log.d(TAG, String.valueOf(collectionId));
-		Log.d(TAG, String.valueOf(cursor.getCount()));
 		cursor.moveToFirst();
 		String photosetId = cursor.getString(1);
-		Log.d(TAG, photosetId);
 		return photosetId;
 	}
 	
@@ -89,13 +85,11 @@ public class CollectionDetail extends Activity {
 
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			Log.d(TAG, "HELLO WORLD");
 			FlickrWebService service = new FlickrWebService();
 			return service.getPhotoList(params[0]);
 		}
 		
 		protected void onPostExecute(JSONObject response){
-			Log.d(TAG, "onPostExecute");
 			try {
 				JSONArray responsePhotos = response.getJSONObject("photoset").getJSONArray("photo");
 				allPhotos:for(int i = 0; i < responsePhotos.length(); i++){
@@ -103,24 +97,18 @@ public class CollectionDetail extends Activity {
 					String[] tagsArray = tags.split(" ");
 					for(int j = 0; j < tagsArray.length; j++){
 						if("preview".equals(tagsArray[j])){
-							Log.d(TAG, "Preview found");
 							String farm = responsePhotos.getJSONObject(i).getString("farm");
 							String id = responsePhotos.getJSONObject(i).getString("id");
 							String secret = responsePhotos.getJSONObject(i).getString("originalsecret");
 							String format = responsePhotos.getJSONObject(i).getString("originalformat");
 							String server = responsePhotos.getJSONObject(i).getString("server");
 							String previewURL = buildPhotoURL(farm, id, secret, server, format);
-							Log.d(TAG, "Preview URL: " + previewURL);
 							downloadPreview(previewURL);
 							break allPhotos;
-						}
-						else{
-							Log.d(TAG, "Preview not found");
 						}
 					}
 				}
 			} catch (JSONException e) {
-				Log.d(TAG, "onPostExecute JSONException");
 				e.printStackTrace();
 			} 
 		}
