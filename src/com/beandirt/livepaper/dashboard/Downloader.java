@@ -189,11 +189,13 @@ public class Downloader extends Activity {
 					InputStream input = new BufferedInputStream(url.openStream(), 50000);
 		            OutputStream output = new FileOutputStream(
 		            		getDir(String.valueOf(photosetRowId), MODE_PRIVATE).toString() + 
-		            		"/" + 
-		            		collectionRowId + 
+		            		"/" +
 		            		i + 
 		            		"." + 
 		            		photoArray[1][i]);
+		            
+		            // TODO: Scramble the filename so it is unclear what is what in the file xplorer
+		            
 					byte data[] = new byte[1024];
 					while ((count = input.read(data)) != -1) {
 						downloaded += count;
@@ -217,13 +219,19 @@ public class Downloader extends Activity {
 		protected void onPostExecute(String result){
 			
 			cursor = dbAdapter.fetchPurchasedCollections(true);
+			
+			// TODO: instead of checking to see if I've only one collection,
+			// I should check to see if the collectionId is set
+			
 			if(cursor.getCount() == 1){
 				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 				SharedPreferences.Editor editor = sp.edit();
 				editor.putString("collectionId", String.valueOf(collectionRowId));
-				editor.putString("photosetId", String.valueOf(photosetRowId));
 				editor.commit();
 			}
+			
+			dbAdapter.setActivePhotoset(String.valueOf(photosetRowId));
+			dbAdapter.setPurchasedCollection(String.valueOf(collectionRowId));
 			
 		    progressDialog.dismiss();
 		    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);

@@ -36,7 +36,7 @@ public class LivePaperSettings extends PreferenceActivity {
 		int i = 0;
 		while(cursor.moveToNext()){
 			entries[i] = cursor.getString(2);
-			entryValues[i] = cursor.getString(0);
+			entryValues[i] = cursor.getString(1);
 			i++;
 		}
 

@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
@@ -36,9 +38,19 @@ public class BitmapManager extends BitmapFactory{
 	}
 	
 	private void populateBitmaps(Context context){
+		Log.d(TAG, "POPULATING BITMAPS");
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 		String collectionId = sp.getString("collectionId", null);
-		String photosetId = sp.getString("photosetId", null);
+		Log.d(TAG, "collection id: " + collectionId);
+		LivePaperDbAdapter dbAdapter = LivePaperDbAdapter.getInstanceOf(context);
+		Cursor cursor = dbAdapter.fetchActivePhotoset(collectionId);
+		cursor.moveToFirst();
+		Log.d(TAG, ""+cursor.getColumnCount());
+		Log.d(TAG, ""+cursor.getCount());
+		Log.d(TAG, ""+cursor.getPosition());
+		String photosetId = cursor.getString(0);
+		
+		Log.d(TAG, photosetId+"/"+collectionId);
 		
 		day_resources = new File[14];
 		night_resources = new File[10];
@@ -46,10 +58,12 @@ public class BitmapManager extends BitmapFactory{
 		File rootDir = context.getDir(photosetId, Activity.MODE_PRIVATE);
 		if(rootDir.isDirectory()){
 			String[] totalFiles = rootDir.list();
+			Log.d(TAG, "totalFiles Length: "+totalFiles.length);
 			for(int i = 0; i < totalFiles.length; i++){
-				int indexOfCollection = totalFiles[i].indexOf(collectionId) + 1;
+				//int indexOfCollection = totalFiles[i].indexOf(collectionId) + 1;
 				int indexOfDot = totalFiles[i].indexOf(".");
-				int fileIndex = Integer.valueOf(totalFiles[i].substring(indexOfCollection, indexOfDot));
+				int fileIndex = Integer.valueOf(totalFiles[i].substring(0, indexOfDot));
+				Log.d(TAG, ""+fileIndex);
 				File file = new File(rootDir.toString() + "/" + totalFiles[i]);
 				
 				if(fileIndex > 13)
@@ -77,6 +91,7 @@ public class BitmapManager extends BitmapFactory{
 			Log.d(TAG,"using night interval");
 			return getNightInterval();
 		}
+		
 	}
 	
 	public float getDayInterval(){
@@ -93,6 +108,8 @@ public class BitmapManager extends BitmapFactory{
 		int tempCounter = (int) Math.floor(timeCalculator.timePassedSinceSolarEvent() / getCurrentInterval());
 		File[] image_resources = timeCalculator.isDay() ? day_resources : night_resources;
 		
+		Log.d(TAG, "There are: "+image_resources.length + " photos for this time period.");
+		
 		Log.d(TAG,String.valueOf(timeCalculator.timePassedSinceSolarEvent()));
 		Log.d(TAG,String.valueOf(getCurrentInterval()));
 		
@@ -101,7 +118,9 @@ public class BitmapManager extends BitmapFactory{
 		
 		if(tempCounter != counter || bitmap == null){
 			counter = tempCounter;
+			Log.d(TAG, image_resources[counter].toString());
 			File file = image_resources[counter];
+			Log.d(TAG, file.getPath());
 			bitmap = BitmapManager.decodeFile(file.getPath());
 			//bitmap = BitmapManager.decodeResource(this.resources, R.drawable.sf_bg);
 		}

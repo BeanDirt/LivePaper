@@ -10,7 +10,8 @@
 		<service
 			android:label="@string/livepaperLabel"
 			android:name=".wallpaper.LivePaper"
-			android:permission="android.permission.BIND_WALLPAPER">
+			android:permission="android.permission.BIND_WALLPAPER"
+			android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.service.wallpaper.WallpaperService" />
 			</intent-filter>
@@ -19,12 +20,14 @@
 	
 		<activity android:name=".LivePaperSettings"
 				  android:label="@string/applicationSettings_Name"
-				  android:exported="true">
+				  android:exported="true"
+				  android:screenOrientation="portrait">
 		</activity>
 
 		<activity android:name=".dashboard.LivePaperDashboard"
 					android:label="@string/dashboardLabel"
-					android:theme="@android:style/Theme.NoTitleBar">
+					android:theme="@android:style/Theme.NoTitleBar"
+					android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
 				<category android:name="android.intent.category.LAUNCHER" />
@@ -32,28 +35,32 @@
 		</activity>
 		
 		<activity android:name=".dashboard.CollectionDetail"
-					android:theme="@android:style/Theme.NoTitleBar">
+					android:theme="@android:style/Theme.NoTitleBar"
+					android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 			</intent-filter>
 		</activity>
 		
 		<activity android:name=".dashboard.MyCollections"
-                  android:label="My Collections">
+                  android:label="My Collections"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
         
         <activity android:name=".dashboard.NewCollections"
-                  android:label="New Collections">
+                  android:label="New Collections"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
         </activity>
 
         <activity android:name=".dashboard.Downloader"
-                  android:label="Downloader">
+                  android:label="Downloader"
+                  android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
@@ -61,7 +68,8 @@
         
         <activity android:name=".dashboard.LivePaperSettings"
 					android:label="@string/dashboardLabel"
-					android:theme="@android:style/Theme.NoTitleBar">
+					android:theme="@android:style/Theme.NoTitleBar"
+					android:screenOrientation="portrait">
 			<intent-filter>
 				<action android:name="android.intent.action.VIEW" />
 			</intent-filter>

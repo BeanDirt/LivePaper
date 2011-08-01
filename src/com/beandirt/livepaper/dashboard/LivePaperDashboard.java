@@ -114,7 +114,7 @@ public class LivePaperDashboard extends Activity {
 						collectionSets.add(new Photoset(setId,collectionId,setTitle));
 					}
 					
-					collections.add(new Collection(collectionId, collectionTitle, collectionDescription, collectionSets, ".99", true, true, true));
+					collections.add(new Collection(collectionId, collectionTitle, collectionDescription, collectionSets, ".99", true, true, false));
 				}
 				
 				if(!updateDatabase()){

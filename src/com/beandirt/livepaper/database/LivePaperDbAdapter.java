@@ -9,7 +9,11 @@ import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_
 import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_PURCHASED;
 import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_TITLE;
 import static com.beandirt.livepaper.database.LivePaperTables.Collections.FIELD_TRIAL;
-import static com.beandirt.livepaper.database.LivePaperTables.Photosets.*;
+import static com.beandirt.livepaper.database.LivePaperTables.Photosets.FIELD_ACTIVE;
+import static com.beandirt.livepaper.database.LivePaperTables.Photosets.FIELD_COLLECTION;
+import static com.beandirt.livepaper.database.LivePaperTables.Photosets.FIELD_HEIGHT;
+import static com.beandirt.livepaper.database.LivePaperTables.Photosets.FIELD_PHOTOSET_ID;
+import static com.beandirt.livepaper.database.LivePaperTables.Photosets.FIELD_WIDTH;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -139,16 +143,35 @@ public class LivePaperDbAdapter {
 	        },  FIELD_PHOTOSET_ID + "=?", new String[] {photosetId}, null, null, null);
 	}
 	
+	public Cursor fetchActivePhotoset(String collectionId){
+		return db.query(PHOTOSETS_TABLE, new String[] {
+				FIELD_ID
+	        },  FIELD_COLLECTION + "=? AND " + FIELD_ACTIVE + "=?", new String[] {collectionId, "1"}, null, null, null);
+	}
+	
+	public int setActivePhotoset(String photosetRowId){
+		ContentValues updateValues = new ContentValues();
+		updateValues.put(FIELD_ACTIVE, true);
+		Log.d(TAG, ""+db.isOpen() + "  " + "photoset update");
+		return db.update(PHOTOSETS_TABLE, updateValues, FIELD_ID + "=?", new String[] {photosetRowId});
+	}
+	
+	public int setPurchasedCollection(String collectionRowId){
+		ContentValues updateValues = new ContentValues();
+		updateValues.put(FIELD_PURCHASED, true);
+		return db.update(COLLECTIONS_TABLE, updateValues, FIELD_ID + "=?", new String[] {collectionRowId});
+	}
+	
 	
 	public int updateCollection(Collection collection){
-		ContentValues updateValues = createContentValues(collection);
+		ContentValues updateValues = updateContentValues(collection);
 		String collectionId = collection.getId();
 		Log.d(TAG, ""+db.isOpen() + "  " + "collection update");
 		return db.update(COLLECTIONS_TABLE, updateValues, FIELD_COLLECTION_ID + "=?", new String[] {collectionId});
 	}
 	
 	public int updatePhotoset(Photoset photoset){
-		ContentValues updateValues = createContentValues(photoset);
+		ContentValues updateValues = updateContentValues(photoset);
 		String photosetId = photoset.getId();
 		String collectionId = photoset.getCollection();
 		Log.d(TAG, ""+db.isOpen());
@@ -163,6 +186,26 @@ public class LivePaperDbAdapter {
         values.put(FIELD_HEIGHT, photoset.getHeight());
         values.put(FIELD_COLLECTION, photoset.getCollection());
         values.put(FIELD_ACTIVE, photoset.getActive());
+        return values;
+	}
+	
+	private ContentValues updateContentValues(Collection collection){
+		ContentValues values = new ContentValues();
+		values.put(FIELD_COLLECTION_ID, collection.getId());
+		values.put(FIELD_TITLE, collection.getTitle());
+        values.put(FIELD_PRICE, collection.getPrice());
+        values.put(FIELD_TRIAL, collection.getTrial());
+        values.put(FIELD_ENABLED, collection.getEnabled());
+        return values;
+	}
+	
+	private ContentValues updateContentValues(Photoset photoset){
+		ContentValues values = new ContentValues();
+		values.put(FIELD_PHOTOSET_ID, photoset.getId());
+		values.put(FIELD_TITLE, photoset.getTitle());
+        values.put(FIELD_WIDTH, photoset.getWidth());
+        values.put(FIELD_HEIGHT, photoset.getHeight());
+        values.put(FIELD_COLLECTION, photoset.getCollection());
         return values;
 	}
 	
