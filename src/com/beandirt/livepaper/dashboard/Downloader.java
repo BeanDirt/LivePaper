@@ -22,10 +22,13 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.StatFs;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
@@ -158,14 +161,14 @@ public class Downloader extends Activity {
 		retrievePhotos();
 	}
 	
-	private class DownloadImageAsync extends AsyncTask<String[], Integer, String>{
+	private class DownloadImageAsync extends AsyncTask<String[], Integer, PhotoDownloadResult>{
 
 		@Override
-		protected String doInBackground(String[]... photoArray) {
+		protected PhotoDownloadResult doInBackground(String[]... photoArray) {
 			try{
 				int j = 0;
 				int count;
-				int totalSize = 0;
+				long totalSize = 0;
 				int downloaded = 0;
 				String[] urlArray = photoArray[0];
 				for(String urlString : urlArray){
@@ -179,6 +182,8 @@ public class Downloader extends Activity {
 					j++;
 					publishProgress((int)((j*100)/urlArray.length), null);
 				}
+				
+				if(!checkAvailableSpace(totalSize)) return PhotoDownloadResult.INSUFFICIENT_STORAGE;
 				
 				int i = 0;
 				
@@ -208,7 +213,7 @@ public class Downloader extends Activity {
 			catch(Exception e){
 				Log.e(TAG, e.getMessage());
 			}
-			return null;
+			return PhotoDownloadResult.SUCCESS;
 		}
 		
 		protected void onProgressUpdate(Integer... progress){
@@ -216,27 +221,54 @@ public class Downloader extends Activity {
 			if(progress[1] != null) progressDialog.setMessage("Downloading Photo " + progress[1] + " of 24");
 		}
 		
-		protected void onPostExecute(String result){
+		protected void onPostExecute(PhotoDownloadResult result){
 			
-			cursor = dbAdapter.fetchPurchasedCollections(true);
-			
-			// TODO: instead of checking to see if I've only one collection,
-			// I should check to see if the collectionId is set
-			
-			if(cursor.getCount() == 1){
-				SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-				SharedPreferences.Editor editor = sp.edit();
-				editor.putString("collectionId", String.valueOf(collectionRowId));
-				editor.commit();
+			switch(result){
+				case SUCCESS: 
+					setActiveCollection();
+					break;
+				case INSUFFICIENT_STORAGE: 
+					showFailure(getString(R.string.error_insufficient_storage));
+					break;
 			}
-			
-			dbAdapter.setActivePhotoset(String.valueOf(photosetRowId));
-			dbAdapter.setPurchasedCollection(String.valueOf(collectionRowId));
-			
-		    progressDialog.dismiss();
-		    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
-		    startActivity(intent);
 		}
+	}
+	
+	private void showFailure(String error){
+		Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
+		progressDialog.dismiss();
+	}
+	
+	private void setActiveCollection(){
+		cursor = dbAdapter.fetchPurchasedCollections(true);
+		
+		// TODO: instead of checking to see if I've only one collection,
+		// I should check to see if the collectionId is set
+		
+		if(cursor.getCount() == 1){
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+			SharedPreferences.Editor editor = sp.edit();
+			editor.putString("collectionId", String.valueOf(collectionRowId));
+			editor.commit();
+		}
+		
+		dbAdapter.setActivePhotoset(String.valueOf(photosetRowId));
+		dbAdapter.setPurchasedCollection(String.valueOf(collectionRowId));
+		
+		progressDialog.dismiss();
+	    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
+	    startActivity(intent);
+	}
+	
+	private boolean checkAvailableSpace(long bytesNeeded){
+		StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
+	    long bytesAvailable = (long)stat.getFreeBlocks() * (long)stat.getBlockSize();;
+	    //return false;
+	    return (bytesAvailable > bytesNeeded);
+	}
+	
+	public enum PhotoDownloadResult{
+		SUCCESS, INSUFFICIENT_STORAGE;
 	}
 	
 	protected void onResume(){
