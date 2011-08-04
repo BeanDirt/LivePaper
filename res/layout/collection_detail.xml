@@ -41,10 +41,10 @@
     </LinearLayout>
   </LinearLayout>
   <Button
+    android:id="@+id/collection_action_button"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@drawable/download_icon"
-    android:onClick="goToDownloader"
     android:layout_alignParentRight="true"
     android:layout_alignParentBottom="true">
   </Button>

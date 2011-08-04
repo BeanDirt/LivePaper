@@ -107,7 +107,7 @@ public class LivePaperDbAdapter {
 	        },  FIELD_ID + "=?", new String[] {String.valueOf(rowid)}, null, null, null);
 	}
 	
-	public Cursor fetchCollection(String collectionid){
+	public Cursor fetchCollection(String collectionId){
 		return db.query(COLLECTIONS_TABLE, new String[] {
 				FIELD_ID,
 	            FIELD_COLLECTION_ID,
@@ -116,7 +116,7 @@ public class LivePaperDbAdapter {
 	            FIELD_TRIAL,
 	            FIELD_ENABLED,
 	            FIELD_PURCHASED
-	        },  FIELD_ID + "=" + collectionid, null, null, null, null);
+	        },  FIELD_COLLECTION_ID + "=?", new String[] {collectionId}, null, null, null);
 	}
 	
 	public Cursor fetchPhotoset(String collectionId, String width, String height){
@@ -156,10 +156,10 @@ public class LivePaperDbAdapter {
 		return db.update(PHOTOSETS_TABLE, updateValues, FIELD_ID + "=?", new String[] {photosetRowId});
 	}
 	
-	public int setPurchasedCollection(String collectionRowId){
+	public int setPurchasedCollection(String collectionId){
 		ContentValues updateValues = new ContentValues();
 		updateValues.put(FIELD_PURCHASED, true);
-		return db.update(COLLECTIONS_TABLE, updateValues, FIELD_ID + "=?", new String[] {collectionRowId});
+		return db.update(COLLECTIONS_TABLE, updateValues, FIELD_COLLECTION_ID + "=?", new String[] {collectionId});
 	}
 	
 	

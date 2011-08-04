@@ -10,29 +10,34 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
+
 public class CollectionDetail extends Activity {
 
 	private Cursor cursor;
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = "CollectionDetail";
-	private long collectionRowId;
-	
+	private String collectionId;
+	private String collectionName;
 	protected LivePaperDbAdapter dbAdapter;
 	
 	RelativeLayout layout;
@@ -42,20 +47,59 @@ public class CollectionDetail extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.collection_detail);
 		
-		collectionRowId = getIntent().getExtras().getLong("rowid");
+		collectionId = getIntent().getExtras().getString("cid");
 		
         setFonts();
         layout = (RelativeLayout) findViewById(R.id.collection_layout);
 	}
 	
 	private void init(){
-		String photosetId = getPhotosetId(collectionRowId);
+		String photosetId = getPhotosetId(collectionId);
 		new GetPreviewImageURLAsync().execute(photosetId);
-		populate();
+		populate(collectionId, photosetId);
 	}
 	
-	private void populate(){
+	private void populate(String collectionId, String photosetId){
 		
+		collectionName = getCollectionName(collectionId);
+		
+		final String cid = collectionId;
+		final String pid = photosetId;
+		
+		Button collectionAction = (Button) findViewById(R.id.collection_action_button);
+		collectionAction.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if(isActivePhotoset(cid, pid)) setActivePhotoset();
+				else goToDownloader();
+			}
+		});
+		
+	}
+	
+	private String getCollectionName(String collectionId){
+		Log.d(TAG, collectionId);
+		cursor = dbAdapter.fetchCollection(collectionId);
+		startManagingCursor(cursor);
+		cursor.moveToFirst();
+		return cursor.getString(2);
+	}
+	
+	private Boolean isActivePhotoset(String collectionId, String photosetId){
+		cursor = dbAdapter.fetchPhotoset(photosetId);
+		startManagingCursor(cursor);
+		cursor.moveToFirst();
+		return(cursor.getInt(6) == 1);
+	}
+	
+	private void setActivePhotoset(){
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences.Editor editor = sp.edit();
+		editor.putString("collectionId",collectionId);
+		editor.commit();
+		
+		Toast.makeText(getApplicationContext(), String.format(getString(R.string.wallpaper_set),collectionName), Toast.LENGTH_SHORT).show();
 	}
 	
 	private void setFonts(){
@@ -64,17 +108,15 @@ public class CollectionDetail extends Activity {
 		title.setTypeface(myriad_pro);
 	}
 	
-	public void goToDownloader(View v){
+	
+	
+	private void goToDownloader(){
 		Intent intent = new Intent(this, Downloader.class);
-		intent.putExtra("rowid", collectionRowId);
+		intent.putExtra("cid", collectionId);
 		startActivity(intent);
 	}
 	
-	private String getPhotosetId(long collectionRowId) throws CursorIndexOutOfBoundsException, NullPointerException{
-		cursor = dbAdapter.fetchCollection(collectionRowId);
-		startManagingCursor(cursor);
-		cursor.moveToFirst();
-		String collectionId = cursor.getString(1);
+	private String getPhotosetId(String collectionId) throws CursorIndexOutOfBoundsException, NullPointerException{
 		Display display = getWindowManager().getDefaultDisplay(); 
 		
 		String width = String.valueOf(display.getWidth());

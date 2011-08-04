@@ -38,7 +38,7 @@ public class Downloader extends Activity {
 	
 	@SuppressWarnings("unused")
 	private static final String TAG = "Downloader";
-	private long collectionRowId;
+	private String collectionId;
 	private long photosetRowId;
 	private Cursor cursor;
 	
@@ -59,7 +59,7 @@ public class Downloader extends Activity {
     	progressDialog.show();
 		
     	try{
-			String photosetId = getPhotosetId(collectionRowId);
+			String photosetId = getPhotosetId(collectionId);
 			photosetRowId = getPhotosetRowId(photosetId);
 			
 			getPhotoList(photosetId);
@@ -78,11 +78,7 @@ public class Downloader extends Activity {
     	return photosetRowId;
     }
     
-    private String getPhotosetId(long collectionRowId) throws CursorIndexOutOfBoundsException, NullPointerException{
-		cursor = dbAdapter.fetchCollection(collectionRowId);
-		startManagingCursor(cursor);
-		cursor.moveToFirst();
-		String collectionId = cursor.getString(1);
+    private String getPhotosetId(String collectionId) throws CursorIndexOutOfBoundsException, NullPointerException{
 		Display display = getWindowManager().getDefaultDisplay(); 
 		
 		String width = String.valueOf(display.getWidth());
@@ -245,15 +241,15 @@ public class Downloader extends Activity {
 		// TODO: instead of checking to see if I've only one collection,
 		// I should check to see if the collectionId is set
 		
-		if(cursor.getCount() == 1){
+		if(cursor.getCount() == 0){
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 			SharedPreferences.Editor editor = sp.edit();
-			editor.putString("collectionId", String.valueOf(collectionRowId));
+			editor.putString("collectionId", collectionId);
 			editor.commit();
 		}
 		
 		dbAdapter.setActivePhotoset(String.valueOf(photosetRowId));
-		dbAdapter.setPurchasedCollection(String.valueOf(collectionRowId));
+		dbAdapter.setPurchasedCollection(collectionId);
 		
 		progressDialog.dismiss();
 	    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
@@ -273,7 +269,7 @@ public class Downloader extends Activity {
 	
 	protected void onResume(){
 		super.onResume();
-		collectionRowId = getIntent().getExtras().getLong("rowid");
+		collectionId = getIntent().getExtras().getString("cid");
 		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 	}
 }

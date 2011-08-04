@@ -13,4 +13,5 @@
     <string name="collection_summary">Choose an installed photo collection.</string>
     <string name="new_collections">Added new collections</string>
     <string name="purchase_confirm">Are you sure you wanna do this?</string>
+    <string name="wallpaper_set">Your wallpaper is now set to %1$s</string>
 </resources>

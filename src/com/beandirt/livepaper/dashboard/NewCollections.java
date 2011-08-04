@@ -42,7 +42,7 @@ public class NewCollections extends ListActivity {
 	protected void onListItemClick(ListView l, View v, int position, long id) {
 		Intent intent = new Intent(this,CollectionDetail.class);
 		cursor.moveToPosition(position);
-		intent.putExtra("rowid", cursor.getLong(0));
+		intent.putExtra("cid", cursor.getString(1));
 		startActivity(intent);
 	}
 	
