@@ -95,6 +95,30 @@ public class LivePaperDbAdapter {
 	        }, FIELD_PURCHASED + "=?", new String[] {(purchased?"1":"0")}, null, null, null);
 	}
 	
+	public Cursor fetchPurchasedCollections(boolean purchased, String width, String height){
+		
+		/*String query = "SELECT * FROM " +  + 
+						" WHERE p." + FIELD_WIDTH + 
+						" =? AND p." + FIELD_HEIGHT +
+						" =?";*/
+		
+		//return db.execSQL(query, new String[] {(purchased?"1":"0"), width, height});
+		
+		return db.query(COLLECTIONS_TABLE + 
+						" c INNER JOIN " + PHOTOSETS_TABLE + 
+						" p ON c." + FIELD_COLLECTION_ID +
+						" = p." + FIELD_COLLECTION, new String[]{
+				"c." + FIELD_ID,
+				FIELD_COLLECTION_ID,
+	            "c." + FIELD_TITLE,
+	            FIELD_PRICE,
+	            FIELD_TRIAL,
+	            FIELD_ENABLED,
+	            FIELD_PURCHASED}, "c." + FIELD_PURCHASED + " =? AND p." + FIELD_WIDTH + " =? AND p." + FIELD_HEIGHT + " =?", new String[] {(purchased?"1":"0"), width, height}, null, null, null);
+		
+		//return db.rawQuery(query, new String[] {(purchased?"1":"0"), width, height});
+	}
+	
 	public Cursor fetchCollection(long rowid){
 		return db.query(COLLECTIONS_TABLE, new String[] {
 				FIELD_ID,
