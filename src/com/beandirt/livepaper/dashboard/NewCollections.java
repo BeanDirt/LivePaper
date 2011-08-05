@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
@@ -33,7 +34,10 @@ public class NewCollections extends ListActivity {
 	}
 	
 	protected void populateList(){
-		cursor = dbAdapter.fetchPurchasedCollections(false);
+		Display display = getWindowManager().getDefaultDisplay(); 
+		String width = String.valueOf(display.getWidth());
+		String height = String.valueOf(display.getHeight());
+		cursor = dbAdapter.fetchPurchasedCollections(false, width, height);
 		startManagingCursor(cursor);
 		setListAdapter(new SimpleCursorAdapter(getApplicationContext(), R.layout.list_collection_item, cursor, new String[] {FIELD_TITLE}, new int[] {R.id.collection_title}));
 	}
