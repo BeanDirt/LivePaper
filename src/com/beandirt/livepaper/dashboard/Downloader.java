@@ -14,8 +14,10 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.os.AsyncTask;
@@ -244,6 +246,8 @@ public class Downloader extends Activity {
 			SharedPreferences.Editor editor = sp.edit();
 			editor.putString("collectionId", collectionId);
 			editor.commit();
+			
+			enableWallpaper();
 		}
 		
 		dbAdapter.setActivePhotoset(String.valueOf(photosetRowId));
@@ -252,6 +256,16 @@ public class Downloader extends Activity {
 		progressDialog.dismiss();
 	    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
 	    startActivity(intent);
+	}
+	
+	private void enableWallpaper(){
+		ComponentName componentToDisable =
+			  new ComponentName("com.beandirt.livepaper",
+			  "com.beandirt.livepaper.wallpaper.LivePaper");
+		
+		getPackageManager().setComponentEnabledSetting(
+			  componentToDisable,
+			  PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
 	}
 	
 	private boolean checkAvailableSpace(long bytesNeeded){
