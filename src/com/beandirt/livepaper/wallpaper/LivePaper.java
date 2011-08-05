@@ -111,8 +111,18 @@ public class LivePaper extends WallpaperService {
 				}
 			});
 			
+			
+			
 			bitmapManager = new BitmapManager(timeCalculator, getResources(), getApplicationContext());
 			currentBitmap = bitmapManager.getBitmap();
+			bitmapManager.setBitmapChangedListener(new BitmapChangedListener() {
+				
+				@Override
+				public void onBitmapChanged() {
+					// drawBitmap(false);
+				}
+			});
+			
 			drawBitmap(false);
 		}
 
@@ -134,12 +144,10 @@ public class LivePaper extends WallpaperService {
 			c = holder.lockCanvas();
 			c.save();
 			c.drawBitmap(currentBitmap,this.xOffset,0,null);
-			if(debug){
-				drawDebug(c);
-			}
-			else{
-				toggle = false;
-			}
+			
+			if(debug) drawDebug(c);
+			else toggle = false;
+
 			c.restore();
 			holder.unlockCanvasAndPost(c);
 		}

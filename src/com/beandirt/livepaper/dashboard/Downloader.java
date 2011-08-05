@@ -2,11 +2,9 @@ package com.beandirt.livepaper.dashboard;
 
 import java.io.BufferedInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -31,8 +29,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.database.LivePaperDbAdapter;
 import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class Downloader extends Activity {
 	

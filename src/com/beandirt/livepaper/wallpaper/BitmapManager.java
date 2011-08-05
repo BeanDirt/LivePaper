@@ -12,6 +12,7 @@ import com.beandirt.livepaper.database.LivePaperDbAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -19,27 +20,37 @@ import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
-public class BitmapManager extends BitmapFactory{
+public class BitmapManager extends BitmapFactory implements OnSharedPreferenceChangeListener{
 	private Bitmap bitmap;
 	private final Resources resources;
 	private final TimeCalculator timeCalculator;
+	private final Context context;
 	
 	private int counter;
 	private File[] day_resources;
 	private File[] night_resources;
+	
+	private SharedPreferences sp;
+	private Boolean settingsChanged;
+	private BitmapChangedListener bitmapChangedListener;	
 	
 	private static final String TAG = "BitmapManager";
 	
 	public BitmapManager(TimeCalculator timeCalculator, Resources resources, Context context){
 		this.resources = resources;
 		this.timeCalculator = timeCalculator;
-		
+		this.context = context;
 		populateBitmaps(context);
+		
+		
 	}
 	
 	private void populateBitmaps(Context context){
 		Log.d(TAG, "POPULATING BITMAPS");
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+		
+		sp = PreferenceManager.getDefaultSharedPreferences(context);
+		sp.registerOnSharedPreferenceChangeListener(this);
+		
 		String collectionId = sp.getString("collectionId", null);
 		Log.d(TAG, "collection id: " + collectionId);
 		LivePaperDbAdapter dbAdapter = LivePaperDbAdapter.getInstanceOf(context);
@@ -116,8 +127,9 @@ public class BitmapManager extends BitmapFactory{
 		Log.d(TAG,String.valueOf(tempCounter));
 		Log.d(TAG,String.valueOf(counter));
 		
-		if(tempCounter != counter || bitmap == null){
+		if(tempCounter != counter || bitmap == null || settingsChanged){
 			counter = tempCounter;
+			settingsChanged = false;
 			Log.d(TAG, image_resources[counter].toString());
 			File file = image_resources[counter];
 			Log.d(TAG, file.getPath());
@@ -150,5 +162,17 @@ public class BitmapManager extends BitmapFactory{
 	
 	public int getCounter(){
 		return counter + 1;
+	}
+
+	@Override
+	public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+			String key) {
+		settingsChanged = true;
+		populateBitmaps(this.context);
+		bitmapChangedListener.onBitmapChanged();
+	}
+	
+	public void setBitmapChangedListener(BitmapChangedListener listener){
+		this.bitmapChangedListener = listener;
 	}
 }
