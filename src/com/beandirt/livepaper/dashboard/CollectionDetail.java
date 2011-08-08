@@ -15,13 +15,17 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -79,7 +83,6 @@ public class CollectionDetail extends Activity {
 	}
 	
 	private String getCollectionName(String collectionId){
-		Log.d(TAG, collectionId);
 		cursor = dbAdapter.fetchCollection(collectionId);
 		startManagingCursor(cursor);
 		cursor.moveToFirst();
@@ -182,6 +185,14 @@ public class CollectionDetail extends Activity {
 		protected void onPostExecute(BitmapDrawable result){
 			if(result != null){
 				layout.setBackgroundDrawable(result);
+				ProgressBar pb = (ProgressBar) findViewById(R.id.collection_detail_spinner);
+				pb.setVisibility(View.INVISIBLE);
+				
+				// this doesn't work for some reason
+				
+				/*Animation fadeOut = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fade_out);
+				ProgressBar pb = (ProgressBar) findViewById(R.id.collection_detail_spinner);
+				pb.startAnimation(fadeOut);*/
 			}
 		}
 	}
