@@ -1,6 +1,5 @@
 package com.beandirt.livepaper.dashboard.flickr;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,8 +7,6 @@ import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -18,7 +15,6 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
@@ -72,9 +68,7 @@ public class FlickrWebService {
 		
 		try {
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			UrlEncodedFormEntity formEntity;
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			return new JSONObject(EntityUtils.toString(response.getEntity()).substring(14));
 		} catch (Exception e) {
@@ -92,10 +86,8 @@ public class FlickrWebService {
 		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_FROB.getMethod()));
 		
         try {
-			UrlEncodedFormEntity formEntity;
-			formEntity = new UrlEncodedFormEntity(postParameters);
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			FROB = new JSONObject(EntityUtils.toString(response.getEntity()).substring(14)).getJSONObject("frob").getString("_content");
 			
@@ -137,10 +129,8 @@ public class FlickrWebService {
 		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_PHOTOSET_LIST.getMethod()));
 		
 		try {
-			UrlEncodedFormEntity formEntity;
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, entityString);
@@ -164,10 +154,8 @@ public class FlickrWebService {
 		postParameters.add(new BasicNameValuePair("photoset_id", photosetId));
 				
 		try {
-			UrlEncodedFormEntity formEntity;
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			returnValue = new JSONObject(entityString.substring(14));
@@ -214,10 +202,8 @@ public class FlickrWebService {
 		
 		
 		try {
-			UrlEncodedFormEntity formEntity;
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, entityString);
@@ -226,7 +212,6 @@ public class FlickrWebService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		String something = PostMethod.GET_AUTH_TOKEN.getMethod();
 		return returnValue;
 		
 	}
