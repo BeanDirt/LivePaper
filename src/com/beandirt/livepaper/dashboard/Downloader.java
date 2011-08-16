@@ -203,6 +203,7 @@ public class Downloader extends Activity {
 						output.write(data, 0, count);
 						publishProgress((int)((downloaded*100)/totalSize), i + 1);
 					}
+					output.close();
 					i++;
 				}
 			}
