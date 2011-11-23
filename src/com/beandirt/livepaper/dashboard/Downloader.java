@@ -31,12 +31,11 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
+import com.beandirt.livepaper.dashboard.service.FlickrService;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class Downloader extends Activity {
 	
-	@SuppressWarnings("unused")
 	private static final String TAG = "Downloader";
 	private String collectionId;
 	private long photosetRowId;
@@ -97,7 +96,7 @@ public class Downloader extends Activity {
 
     		@Override
     		protected JSONObject doInBackground(String... urls) {
-    			FlickrWebService service = new FlickrWebService();
+    			FlickrService service = new FlickrService();
     			return service.getPhotoList(id);
     		}
     		

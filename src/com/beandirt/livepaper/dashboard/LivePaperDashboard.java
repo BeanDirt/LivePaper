@@ -1,39 +1,20 @@
 package com.beandirt.livepaper.dashboard;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
-import android.app.ProgressDialog;
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
-import com.beandirt.livepaper.dashboard.flickr.FlickrWebService.PostMethod;
-import com.beandirt.livepaper.dashboard.model.Collection;
-import com.beandirt.livepaper.dashboard.model.Photoset;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class LivePaperDashboard extends Activity {
 	
 	private static final String TAG = "LivePaperDashboard";
 	
-	private List<Collection> collections;
-	private ProgressDialog dialog;
 	protected LivePaperDbAdapter dbAdapter;
-	private CheckForUpdatesAsync checkForUpdates;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,11 +22,7 @@ public class LivePaperDashboard extends Activity {
 	}
 	
 	private void init(){
-		dialog = ProgressDialog.show(this, "", 
-                "Checking for updates...", true);
-        dialog.show();
-        checkForUpdates = new CheckForUpdatesAsync();
-        checkForUpdates.execute();
+		
 	}
 	
 	
@@ -64,7 +41,7 @@ public class LivePaperDashboard extends Activity {
 		startActivity(intent);
 	}
 	
-	private boolean updateDatabase(){
+	/*private boolean updateDatabase(){
 		boolean updatedFlag = false;
 		for(Collection collection : collections){
 			int result = dbAdapter.updateCollection(collection);
@@ -83,13 +60,13 @@ public class LivePaperDashboard extends Activity {
 			}
 		}
 		return updatedFlag;
-	}
+	}*/
 	
-	private class CheckForUpdatesAsync extends AsyncTask<Object, Object, JSONObject> {
+	/*private class CheckForUpdatesAsync extends AsyncTask<Object, Object, JSONObject> {
 
 		@Override
 		protected JSONObject doInBackground(Object... params) {
-			FlickrWebService service = new FlickrWebService();
+			IFlickrService service = new FlickrService();
 			return service.execute(PostMethod.GET_COLLECTION_LIST);
 		}
 		
@@ -135,7 +112,7 @@ public class LivePaperDashboard extends Activity {
 				dialog.dismiss();
 			}
 		}
-	}
+	}*/
 	
 	protected void onResume() {
 		super.onResume();
@@ -147,19 +124,12 @@ public class LivePaperDashboard extends Activity {
 	protected void onPause(){
 		super.onPause();
 		Log.d(TAG, "onPause()");
-		checkForUpdates.cancel(true);
+		//checkForUpdates.cancel(true);
 		try{
 			dbAdapter.close();
 		}
 		catch(Exception e){
 			Log.e(TAG, e.getMessage());
-		}
-		
-		try{
-			dialog.dismiss();
-		}
-		catch(Exception e){
-			Log.w(TAG, e.getMessage());
 		}
 	}
 	

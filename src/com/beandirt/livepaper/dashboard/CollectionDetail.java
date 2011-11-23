@@ -15,15 +15,12 @@ import android.database.Cursor;
 import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
-import android.opengl.Visibility;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
@@ -31,17 +28,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.dashboard.flickr.FlickrWebService;
+import com.beandirt.livepaper.dashboard.service.FlickrService;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class CollectionDetail extends Activity {
 
 	private Cursor cursor;
-	
-	@SuppressWarnings("unused")
 	private static final String TAG = "CollectionDetail";
 	private String collectionId;
-	private String collectionName;
+	private String collectionTitle;
+	private String collectionDescription;
 	protected LivePaperDbAdapter dbAdapter;
 	
 	RelativeLayout layout;
@@ -52,6 +48,8 @@ public class CollectionDetail extends Activity {
 		setContentView(R.layout.collection_detail);
 		
 		collectionId = getIntent().getExtras().getString("cid");
+		collectionTitle = getIntent().getExtras().getString("collection_title");
+		collectionDescription = getIntent().getExtras().getString("collection_description");
 		
         setFonts();
         layout = (RelativeLayout) findViewById(R.id.collection_layout);
@@ -65,10 +63,14 @@ public class CollectionDetail extends Activity {
 	
 	private void populate(String collectionId, String photosetId){
 		
-		collectionName = getCollectionName(collectionId);
-		
 		final String cid = collectionId;
 		final String pid = photosetId;
+		
+		TextView titleView = (TextView) findViewById(R.id.placeTitle);
+		titleView.setText(collectionTitle);
+		
+		TextView subtitleView = (TextView) findViewById(R.id.placeSubTitle);
+		subtitleView.setText(collectionDescription);
 		
 		Button collectionAction = (Button) findViewById(R.id.collection_action_button);
 		collectionAction.setOnClickListener(new View.OnClickListener() {
@@ -79,14 +81,6 @@ public class CollectionDetail extends Activity {
 				else goToDownloader();
 			}
 		});
-		
-	}
-	
-	private String getCollectionName(String collectionId){
-		cursor = dbAdapter.fetchCollection(collectionId);
-		startManagingCursor(cursor);
-		cursor.moveToFirst();
-		return cursor.getString(2);
 	}
 	
 	private Boolean isActivePhotoset(String collectionId, String photosetId){
@@ -102,7 +96,7 @@ public class CollectionDetail extends Activity {
 		editor.putString("collectionId",collectionId);
 		editor.commit();
 		
-		Toast.makeText(getApplicationContext(), String.format(getString(R.string.wallpaper_set),collectionName), Toast.LENGTH_SHORT).show();
+		Toast.makeText(getApplicationContext(), String.format(getString(R.string.wallpaper_set),collectionTitle), Toast.LENGTH_SHORT).show();
 	}
 	
 	private void setFonts(){
@@ -110,8 +104,6 @@ public class CollectionDetail extends Activity {
 		TextView title = (TextView) findViewById(R.id.placeTitle);
 		title.setTypeface(myriad_pro);
 	}
-	
-	
 	
 	private void goToDownloader(){
 		Intent intent = new Intent(this, Downloader.class);
@@ -135,7 +127,7 @@ public class CollectionDetail extends Activity {
 
 		@Override
 		protected JSONObject doInBackground(String... params) {
-			FlickrWebService service = new FlickrWebService();
+			FlickrService service = new FlickrService();
 			return service.getPhotoList(params[0]);
 		}
 		

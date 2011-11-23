@@ -1,8 +1,5 @@
 package com.beandirt.livepaper.util;
 
-import java.io.File;
-
-import android.app.Activity;
 import android.content.Context;
 
 public class FileManager {
@@ -12,7 +9,7 @@ public class FileManager {
 	}
 	
 	public static boolean isDownloaded(Context context, String collectionId, String photosetId){
-		File rootDir = context.getDir(photosetId, Activity.MODE_PRIVATE);
+		//File rootDir = context.getDir(photosetId, Activity.MODE_PRIVATE);
 		return false;
 	}
 }

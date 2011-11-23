@@ -1,24 +1,20 @@
 package com.beandirt.livepaper.dashboard.model;
 
-import java.util.List;
-
 public class Collection {
 	private long rowId;
 
 	private final String id;
 	private final String title;
 	private final String description;
-	private final List<Photoset> photosets;
 	private final String price;
 	private final Boolean trial;
 	private final Boolean enabled;
 	private final Boolean purchased;
 	
-	public Collection(String id, String title, String description, List<Photoset> photosets, String price, Boolean trial, Boolean enabled, Boolean purchased){
+	public Collection(String id, String title, String description, String price, Boolean trial, Boolean enabled, Boolean purchased){
 		this.id = id;
 		this.title = title;
 		this.description = description;
-		this.photosets = photosets;
 		this.price = price;
 		this.trial = trial;
 		this.enabled = enabled;
@@ -45,10 +41,6 @@ public class Collection {
 		return this.description;
 	}
 	
-	public List<Photoset> getPhotosets() {
-		return this.photosets;
-	}
-
 	public String getPrice() {
 		return this.price;
 	}

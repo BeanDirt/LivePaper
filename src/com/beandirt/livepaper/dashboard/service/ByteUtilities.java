@@ -1,4 +1,4 @@
-package com.beandirt.livepaper.dashboard.flickr;
+package com.beandirt.livepaper.dashboard.service;
 
 public class ByteUtilities {
 

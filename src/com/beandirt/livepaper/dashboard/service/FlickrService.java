@@ -1,6 +1,5 @@
-package com.beandirt.livepaper.dashboard.flickr;
+package com.beandirt.livepaper.dashboard.service;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -8,8 +7,6 @@ import java.util.ArrayList;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
-import org.apache.http.ParseException;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -18,12 +15,11 @@ import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.util.Log;
 
-public class FlickrWebService {
+public class FlickrService implements IFlickrService{
 
 	private static final String TAG = "FlickrWebService";
 	private static final String URL = "http://api.flickr.com/services/rest/";
@@ -38,14 +34,14 @@ public class FlickrWebService {
 	HttpPost httpPost;
 	JSONObject returnValue;
 	
-	public FlickrWebService(){
+	public FlickrService(){
 		HttpParams myParams = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(myParams, 10000);
 		httpClient = new DefaultHttpClient();
 		httpPost = new HttpPost(URL);
 	}
 	
-	public FlickrWebService(String frob){
+	public FlickrService(String frob){
 		HttpParams myParams = new BasicHttpParams();
 		HttpConnectionParams.setConnectionTimeout(myParams, 10000);
 		httpClient = new DefaultHttpClient();
@@ -226,7 +222,7 @@ public class FlickrWebService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
-		String something = PostMethod.GET_AUTH_TOKEN.getMethod();
+		//String something = PostMethod.GET_AUTH_TOKEN.getMethod();
 		return returnValue;
 		
 	}

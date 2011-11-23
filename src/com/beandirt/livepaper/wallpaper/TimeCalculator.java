@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import android.text.format.Time;
-import android.util.Log;
 
 public class TimeCalculator {
 

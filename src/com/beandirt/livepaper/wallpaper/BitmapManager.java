@@ -1,13 +1,6 @@
 package com.beandirt.livepaper.wallpaper;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-
-import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +12,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class BitmapManager extends BitmapFactory implements OnSharedPreferenceChangeListener{
 	private Bitmap bitmap;

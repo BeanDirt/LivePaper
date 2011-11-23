@@ -1,16 +1,16 @@
 package com.beandirt.livepaper.dashboard;
 
-import com.beandirt.livepaper.R;
-import com.beandirt.livepaper.database.LivePaperDbAdapter;
-
 import android.database.Cursor;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.PreferenceActivity;
-import android.util.Log;
+
+import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class LivePaperSettings extends PreferenceActivity {
 
+	@SuppressWarnings("unused")
 	private static final String TAG = "LivePaperSettings";
 	private LivePaperDbAdapter dbAdapter; 
 	private Cursor cursor;
