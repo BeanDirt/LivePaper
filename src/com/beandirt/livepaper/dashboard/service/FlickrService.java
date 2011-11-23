@@ -68,9 +68,7 @@ public class FlickrService implements IFlickrService{
 		
 		try {
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			UrlEncodedFormEntity formEntity;
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			return new JSONObject(EntityUtils.toString(response.getEntity()).substring(14));
 		} catch (Exception e) {
@@ -88,10 +86,8 @@ public class FlickrService implements IFlickrService{
 		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_FROB.getMethod()));
 		
         try {
-			UrlEncodedFormEntity formEntity;
-			formEntity = new UrlEncodedFormEntity(postParameters);
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			FROB = new JSONObject(EntityUtils.toString(response.getEntity()).substring(14)).getJSONObject("frob").getString("_content");
 			
@@ -133,10 +129,8 @@ public class FlickrService implements IFlickrService{
 		postParameters.add(new BasicNameValuePair("method", PostMethod.GET_PHOTOSET_LIST.getMethod()));
 		
 		try {
-			UrlEncodedFormEntity formEntity;
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, entityString);
@@ -160,10 +154,8 @@ public class FlickrService implements IFlickrService{
 		postParameters.add(new BasicNameValuePair("photoset_id", photosetId));
 				
 		try {
-			UrlEncodedFormEntity formEntity;
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			returnValue = new JSONObject(entityString.substring(14));
@@ -210,10 +202,8 @@ public class FlickrService implements IFlickrService{
 		
 		
 		try {
-			UrlEncodedFormEntity formEntity;
 			postParameters.add(new BasicNameValuePair("api_sig", createSignature(postParameters)));
-			formEntity = new UrlEncodedFormEntity(postParameters);
-			httpPost.setEntity(formEntity);
+			httpPost.setEntity(new UrlEncodedFormEntity(postParameters));
 			response = httpClient.execute(httpPost);
 			String entityString = EntityUtils.toString(response.getEntity());
 			Log.d(TAG, entityString);
