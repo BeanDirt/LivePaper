@@ -32,17 +32,20 @@ import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.dashboard.service.FlickrService;
+import com.beandirt.livepaper.dashboard.service.IRestService;
+import com.beandirt.livepaper.dashboard.service.RestService;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class Downloader extends Activity {
 	
 	private static final String TAG = "Downloader";
 	private String collectionId;
-	private long photosetRowId;
+	//private long photosetRowId;
 	private Cursor cursor;
 	
 	private ProgressDialog progressDialog;
 	protected LivePaperDbAdapter dbAdapter;
+	private String photosetId;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,8 +61,8 @@ public class Downloader extends Activity {
     	progressDialog.show();
 		
     	try{
-			String photosetId = getPhotosetId(collectionId);
-			photosetRowId = getPhotosetRowId(photosetId);
+			photosetId = getPhotosetId(collectionId);
+			//photosetRowId = getPhotosetRowId(photosetId);
 			
 			getPhotoList(photosetId);
 		}
@@ -69,13 +72,13 @@ public class Downloader extends Activity {
 		}
 	}
 	
-    private long getPhotosetRowId(String photosetId){
-    	cursor = dbAdapter.fetchPhotoset(photosetId);
-    	startManagingCursor(cursor);
-    	cursor.moveToFirst();
-    	long photosetRowId = cursor.getLong(0);
-    	return photosetRowId;
-    }
+//    private long getPhotosetRowId(String photosetId){
+//    	cursor = dbAdapter.fetchPhotoset(photosetId);
+//    	startManagingCursor(cursor);
+//    	cursor.moveToFirst();
+//    	long photosetRowId = cursor.getLong(0);
+//    	return photosetRowId;
+//    }
     
     private String getPhotosetId(String collectionId) throws CursorIndexOutOfBoundsException, NullPointerException{
 		Display display = getWindowManager().getDefaultDisplay(); 
@@ -188,13 +191,13 @@ public class Downloader extends Activity {
 					conn.connect();
 					InputStream input = new BufferedInputStream(url.openStream(), 50000);
 		            OutputStream output = new FileOutputStream(
-		            		getDir(String.valueOf(photosetRowId), MODE_PRIVATE).toString() + 
+		            		getDir(photosetId, MODE_PRIVATE).toString() + 
 		            		"/" +
 		            		i + 
 		            		"." + 
 		            		photoArray[1][i]);
 		            
-		            // TODO: Scramble the filename so it is unclear what is what in the file xplorer
+		            // TODO: Scramble the filename so it is unclear what is what in the file explorer
 		            
 					byte data[] = new byte[1024];
 					while ((count = input.read(data)) != -1) {
@@ -236,13 +239,8 @@ public class Downloader extends Activity {
 	}
 	
 	private void setActiveCollection(){
-		cursor = dbAdapter.fetchPurchasedCollections(true);
-		
-		// TODO: instead of checking to see if I've only one collection,
-		// I should check to see if the collectionId is set
-		
-		if(cursor.getCount() == 0){
-			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		if(!sp.contains("collectionId")){
 			SharedPreferences.Editor editor = sp.edit();
 			editor.putString("collectionId", collectionId);
 			editor.commit();
@@ -250,12 +248,23 @@ public class Downloader extends Activity {
 			enableWallpaper();
 		}
 		
-		dbAdapter.setActivePhotoset(String.valueOf(photosetRowId));
-		dbAdapter.setPurchasedCollection(collectionId);
+		new MarkPurchasedAsync().execute(collectionId, "citizen@tedconn.com");
+	}
+	
+	private class MarkPurchasedAsync extends AsyncTask<String, Object, Boolean>{
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			IRestService service = new RestService();
+			return service.purchaseCollection(params[0], params[1]);
+		}
 		
-		progressDialog.dismiss();
-	    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
-	    startActivity(intent);
+		@Override
+		protected void onPostExecute(Boolean success){
+			progressDialog.dismiss();
+		    Intent intent = new Intent(getApplicationContext(), LivePaperDashboard.class);
+		    startActivity(intent);
+		}
 	}
 	
 	private void enableWallpaper(){
@@ -271,7 +280,6 @@ public class Downloader extends Activity {
 	private boolean checkAvailableSpace(long bytesNeeded){
 		StatFs stat = new StatFs(Environment.getDataDirectory().getPath());
 	    long bytesAvailable = (long)stat.getFreeBlocks() * (long)stat.getBlockSize();;
-	    //return false;
 	    return (bytesAvailable > bytesNeeded);
 	}
 	

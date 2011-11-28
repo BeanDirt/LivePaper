@@ -1,7 +1,9 @@
 package com.beandirt.livepaper.dashboard;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -40,6 +42,7 @@ public class NewCollections extends ListActivity {
 	private EnabledCollectionsAsync enabledCollectionsAsync;
 	private PhotosetsListAsync photosetsAsync;
 	private CollectionAdapter collectionAdapter;
+	private Map<Collection,String> photosetMap;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,10 +67,12 @@ public class NewCollections extends ListActivity {
 		int height = display.getHeight();
 		
 		filteredCollections = new ArrayList<Collection>();
-		
+		photosetMap = new HashMap<Collection, String>();
 		for(Collection c : collections){
 			for(Photoset ps : photosets){
 				if(ps.getCollection().equals(c.getId()) && width == ps.getWidth() && height == ps.getHeight()){
+					// TODO: Here we need to determine if they own the photoset already or not 
+					photosetMap.put(c, ps.getId());
 					filteredCollections.add(c);
 				}
 			}
@@ -166,6 +171,7 @@ public class NewCollections extends ListActivity {
 		intent.putExtra("cid", collection.getId());
 		intent.putExtra("collection_title", collection.getTitle());
 		intent.putExtra("collection_description", collection.getDescription());
+		intent.putExtra("photosetId", photosetMap.get(collection));
 		startActivity(intent);
 	}
 	

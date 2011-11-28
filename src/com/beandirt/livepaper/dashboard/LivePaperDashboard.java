@@ -1,12 +1,19 @@
 package com.beandirt.livepaper.dashboard;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 
 import com.beandirt.livepaper.R;
+import com.beandirt.livepaper.dashboard.service.IRestService;
+import com.beandirt.livepaper.dashboard.service.RestService;
 import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class LivePaperDashboard extends Activity {
@@ -22,6 +29,23 @@ public class LivePaperDashboard extends Activity {
 	}
 	
 	private void init(){
+		
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+		if(!sp.contains("userId")){
+			Account[] accounts = AccountManager.get(this).getAccounts();
+			for (Account account : accounts) {
+				if(account.type == "com.google"){
+					
+				}
+				// TODO: Check possibleEmail against an email regex or treat
+				// account.name as an email address only for certain account.type values.
+			}
+		}
+		
+		
+		//CreateUserAsync createUser = new CreateUserAsync();
+		//createUser.execute("bob","jones","email@example.com");
+		
 		
 	}
 	
@@ -114,6 +138,20 @@ public class LivePaperDashboard extends Activity {
 		}
 	}*/
 	
+	public class CreateUserAsync extends AsyncTask<String, Object, Boolean>{
+
+		@Override
+		protected Boolean doInBackground(String... params) {
+			IRestService service = new RestService();
+			return service.createUser(params[0], params[1], params[2]);
+		}
+		
+		@Override
+		public void onPostExecute(Boolean result){
+			System.out.println("onPostExecute()");
+		}
+	}
+	
 	protected void onResume() {
 		super.onResume();
 		Log.d(TAG, "onResume()");
@@ -131,6 +169,5 @@ public class LivePaperDashboard extends Activity {
 		catch(Exception e){
 			Log.e(TAG, e.getMessage());
 		}
-	}
-	
+	}	
 }

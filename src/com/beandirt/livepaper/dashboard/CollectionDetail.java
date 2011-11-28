@@ -11,15 +11,12 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -29,16 +26,15 @@ import android.widget.Toast;
 
 import com.beandirt.livepaper.R;
 import com.beandirt.livepaper.dashboard.service.FlickrService;
-import com.beandirt.livepaper.database.LivePaperDbAdapter;
 
 public class CollectionDetail extends Activity {
 
-	private Cursor cursor;
 	private static final String TAG = "CollectionDetail";
 	private String collectionId;
+	private String photosetId;
 	private String collectionTitle;
 	private String collectionDescription;
-	protected LivePaperDbAdapter dbAdapter;
+	private boolean isOwned;
 	
 	RelativeLayout layout;
 	
@@ -51,20 +47,24 @@ public class CollectionDetail extends Activity {
 		collectionTitle = getIntent().getExtras().getString("collection_title");
 		collectionDescription = getIntent().getExtras().getString("collection_description");
 		
+		if(getIntent().getExtras().containsKey("photosetId")){
+			photosetId = getIntent().getExtras().getString("photosetId");
+			isOwned = false;
+		}
+		else{
+			isOwned = true;
+		}
+		
         setFonts();
         layout = (RelativeLayout) findViewById(R.id.collection_layout);
 	}
 	
 	private void init(){
-		String photosetId = getPhotosetId(collectionId);
 		new GetPreviewImageURLAsync().execute(photosetId);
-		populate(collectionId, photosetId);
+		populate();
 	}
 	
-	private void populate(String collectionId, String photosetId){
-		
-		final String cid = collectionId;
-		final String pid = photosetId;
+	private void populate(){
 		
 		TextView titleView = (TextView) findViewById(R.id.placeTitle);
 		titleView.setText(collectionTitle);
@@ -77,17 +77,11 @@ public class CollectionDetail extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				if(isActivePhotoset(cid, pid)) setActivePhotoset();
+				// TODO: Here we need to really find out if they already have downloaded it or not
+				if(isOwned) setActivePhotoset();
 				else goToDownloader();
 			}
 		});
-	}
-	
-	private Boolean isActivePhotoset(String collectionId, String photosetId){
-		cursor = dbAdapter.fetchPhotoset(photosetId);
-		startManagingCursor(cursor);
-		cursor.moveToFirst();
-		return(cursor.getInt(6) == 1);
 	}
 	
 	private void setActivePhotoset(){
@@ -109,18 +103,6 @@ public class CollectionDetail extends Activity {
 		Intent intent = new Intent(this, Downloader.class);
 		intent.putExtra("cid", collectionId);
 		startActivity(intent);
-	}
-	
-	private String getPhotosetId(String collectionId) throws CursorIndexOutOfBoundsException, NullPointerException{
-		Display display = getWindowManager().getDefaultDisplay(); 
-		
-		String width = String.valueOf(display.getWidth());
-		String height = String.valueOf(display.getHeight());
-		
-		cursor = dbAdapter.fetchPhotoset(collectionId, width, height);
-		cursor.moveToFirst();
-		String photosetId = cursor.getString(1);
-		return photosetId;
 	}
 	
 	private class GetPreviewImageURLAsync extends AsyncTask<String, Integer, JSONObject>{
@@ -200,7 +182,6 @@ public class CollectionDetail extends Activity {
 	protected void onResume(){
 		super.onResume();
 		Log.d(TAG, "onResume()");
-		dbAdapter = LivePaperDbAdapter.getInstanceOf(getApplicationContext());
 		init();
 	}
 }

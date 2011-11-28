@@ -41,16 +41,10 @@ public class MyCollections extends ListActivity {
 	}
 
 	protected void getPurchasedCollections(){
-		//Display display = getWindowManager().getDefaultDisplay(); 
-		//String width = String.valueOf(display.getWidth());
-		//String height = String.valueOf(display.getHeight());
-		
+		// TODO: Here we need to distinguish between purchased collections and
+		// purchased collections on other devices
 		purchasedCollectionsAsync = new PurchasedCollectionsAsync();
 		purchasedCollectionsAsync.execute("citizen@tedconn.com");
-		
-		/*cursor = dbAdapter.fetchPurchasedCollections(true, width, height);
-		startManagingCursor(cursor);
-		setListAdapter(new SimpleCursorAdapter(getApplicationContext(), R.layout.list_collection_item, cursor, new String[] {FIELD_TITLE}, new int[] {R.id.collection_title}));*/
 	}
 	
 	protected void populateList(){
